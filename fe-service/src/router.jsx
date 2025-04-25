@@ -2,8 +2,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 // Import your pages
-import HomePage from '../pages/Home';
-import AuthPage from '../features/rifqi-auth/pages/Login';
+import HomePage from './pages/Home';
+import AuthPage from './features/rifqi-auth/pages/Login';
 
 const router = createBrowserRouter([
     {
