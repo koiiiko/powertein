@@ -34,12 +34,12 @@ To create your Front-end dir:
     ```
 2. Create your folder
     ```bash
-    mkdir src\features\*yourname*-*yourfeature*
+    mkdir src\features\[yourname]-[yourfeature]
     ```
 
 3. Create your sub-folder
     ```bash
-    mkdir src\features\*yourname*-*yourfeature*\components src\features\*yourname*-*yourfeature*\containers src\features\*yourname*-*yourfeature*\lib src\features\*yourname*-*yourfeature*\pages
+    mkdir src\features\[yourname]-[yourfeature]\components src\features\[yourname]-[yourfeature]\containers src\features\[yourname]-[yourfeature]\lib src\features\[yourname]-[yourfeature]\pages
     ```
 
 ### Back-End Service
