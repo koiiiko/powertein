@@ -2,7 +2,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@heroui/react";
-import "@/components/ui/tailwind.css";
 import { User } from "lucide-react";
 
 const Homepage = () => {
