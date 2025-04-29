@@ -6,4 +6,8 @@
   html {
     font-family: 'Poppins', sans-serif;
   }
+  
+  p, h1, h2, h3, h4, h5, h6 {
+    @apply text-sm sm:text-base lg:text-xl xl:text-2xl;
+  }
 }
