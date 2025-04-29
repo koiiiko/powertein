@@ -67,6 +67,7 @@ This project using [`https://www.conventionalcommits.org/en/v1.0.0/`](https://ww
 - Vite
 - TailwindCSS
 - HeroUI
+- Lucide React (Icon)
 
 ### Back-End
 - Express Js
