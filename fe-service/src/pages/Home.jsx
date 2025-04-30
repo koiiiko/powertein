@@ -3,11 +3,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@heroui/react";
 import { User } from "lucide-react";
-import SidebarLayout from "../components/sidebarlayout";
+import AppsLayout from "../components/layout";
 
 const Homepage = () => {
   return (
-    <SidebarLayout>
+    <AppsLayout>
       <div className="">
         <h1 className="">Welcome to Powertein</h1>
         <div className="">
@@ -21,7 +21,7 @@ const Homepage = () => {
           <hr />
         </div>
       </div>
-    </SidebarLayout>
+    </AppsLayout>
   );
 };
 

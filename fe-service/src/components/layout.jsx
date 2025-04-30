@@ -9,7 +9,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const SidebarLayout = ({ children }) => {
+const AppsLayout = ({ children }) => {
   const [activeLink, setActiveLink] = useState("");
   const handleLinkClick = (linkName) => {
     setActiveLink(linkName);
@@ -17,7 +17,7 @@ const SidebarLayout = ({ children }) => {
   return (
     <div className="grid grid-cols-12 h-screen">
       {/* Sidebar */}
-      <aside className="col-span-2 flex flex-col overflow-hidden text-center bg-[#F1F4F9] ">
+      <aside className="col-span-2 flex flex-col overflow-y-auto overflow-x-hidden text-center bg-[#F1F4F9] ">
         <h1 className="font-semibold text-gray-800 my-5 md:text-3xl ">
           PowerTein
         </h1>
@@ -25,11 +25,10 @@ const SidebarLayout = ({ children }) => {
         <nav className="flex flex-col gap-3 text-left mx-3">
           <Link
             to="/"
-            className={`${
-              activeLink === "protein-calculator"
-                ? "text-[#45556C] bg-white font-bold"
-                : "text-[#91A1BA]"
-            } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
+            className={`${activeLink === "protein-calculator"
+              ? "text-[#45556C] bg-white font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
             onClick={() => handleLinkClick("protein-calculator")}
           >
             <Calculator className="me-3" />
@@ -37,11 +36,10 @@ const SidebarLayout = ({ children }) => {
           </Link>
           <Link
             to="/"
-            className={`${
-              activeLink === "protein-tracker"
-                ? "text-[#45556C] bg-white font-bold"
-                : "text-[#91A1BA]"
-            } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
+            className={`${activeLink === "protein-tracker"
+              ? "text-[#45556C] bg-white font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
             onClick={() => handleLinkClick("protein-tracker")}
           >
             <NotebookPen className="me-3" />
@@ -49,11 +47,10 @@ const SidebarLayout = ({ children }) => {
           </Link>
           <Link
             to="/"
-            className={`${
-              activeLink === "proteimart"
-                ? "text-[#45556C] bg-white font-bold"
-                : "text-[#91A1BA]"
-            } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
+            className={`${activeLink === "proteimart"
+              ? "text-[#45556C] bg-white font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
             onClick={() => handleLinkClick("proteimart")}
           >
             <ShoppingCart className="me-3" />
@@ -61,11 +58,10 @@ const SidebarLayout = ({ children }) => {
           </Link>
           <Link
             to="/"
-            className={`${
-              activeLink === "proteinpedia"
-                ? "text-[#45556C] bg-white font-bold"
-                : "text-[#91A1BA]"
-            } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
+            className={`${activeLink === "proteinpedia"
+              ? "text-[#45556C] bg-white font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
             onClick={() => handleLinkClick("proteinpedia")}
           >
             <Newspaper className="me-3" />
@@ -73,11 +69,10 @@ const SidebarLayout = ({ children }) => {
           </Link>
           <Link
             to="/"
-            className={`${
-              activeLink === "proteinbot"
-                ? "text-[#45556C] bg-white font-bold"
-                : "text-[#91A1BA]"
-            } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
+            className={`${activeLink === "proteinbot"
+              ? "text-[#45556C] bg-white font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
             onClick={() => handleLinkClick("proteinbot")}
           >
             <Bot className="me-3" />
@@ -85,12 +80,21 @@ const SidebarLayout = ({ children }) => {
           </Link>
         </nav>
         {/* Sidebar User Info */}
-        <div className="flex px-2 items-center mt-auto my-8 mx-3">
+        <div className="flex items-center mt-auto my-8 mx-5">
           <div className="flex flex-col text-left text-gray-500">
             <p className="font-semibold text-gray-700 md:text-[14px]">Mike Den</p>
             <p className="md:text-xs">mike.den@example.com</p>
           </div>
-          <ChevronRight size={24} className="ml-3 flex text-gray-500" />
+          <Link
+            to="/"
+            className={`${activeLink === "profile"
+              ? "text-[#45556C] font-bold"
+              : "text-[#91A1BA]"
+              } hover:text-gray-950  ms-auto rounded-lg`}
+            onClick={() => handleLinkClick("profile")}
+          >
+            <ChevronRight size={16} />
+          </Link>
         </div>
       </aside>
 
@@ -100,4 +104,4 @@ const SidebarLayout = ({ children }) => {
   );
 };
 
-export default SidebarLayout;
+export default AppsLayout;
