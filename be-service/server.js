@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Powertein API' });
 });
 app.use('/auth', authService);
-app.use('/api/radit-calculator', raditCalculatorService);
+app.use('/calculator', raditCalculatorService);
 
 // Start server : http://localhost:5000/
 const PORT = process.env.PORT || 5000;
