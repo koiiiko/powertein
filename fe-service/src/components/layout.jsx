@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Calculator,
   NotebookPen,
@@ -10,75 +9,72 @@ import {
 } from "lucide-react";
 
 const AppsLayout = ({ children }) => {
-  const [activeLink, setActiveLink] = useState("");
-  const handleLinkClick = (linkName) => {
-    setActiveLink(linkName);
-  };
+  const location = useLocation(); // <--- pakai ini untuk cek path aktif
+
   return (
     <div className="grid grid-cols-12 h-screen">
       {/* Sidebar */}
-      <aside className="col-span-2 flex flex-col overflow-y-auto overflow-x-hidden text-center bg-[#F1F4F9] ">
-        <h1 className="font-semibold text-gray-800 my-5 md:text-3xl ">
-          PowerTein
-        </h1>
+      <aside className="col-span-2 flex flex-col overflow-y-auto overflow-x-hidden text-center bg-[#F1F4F9]">
+        <h1 className="font-semibold text-gray-800 my-5 md:text-3xl">PowerTein</h1>
+
         {/* Sidebar Menu */}
         <nav className="flex flex-col gap-3 text-left mx-3">
           <Link
             to="/"
-            className={`${activeLink === "protein-calculator"
+            className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
-            onClick={() => handleLinkClick("protein-calculator")}
           >
             <Calculator className="me-3" />
             Protein Calculator
           </Link>
+
           <Link
             to="/"
-            className={`${activeLink === "protein-tracker"
+            className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
-            onClick={() => handleLinkClick("protein-tracker")}
           >
             <NotebookPen className="me-3" />
             Protein Tracker
           </Link>
+
           <Link
             to="/"
-            className={`${activeLink === "proteimart"
+            className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
-            onClick={() => handleLinkClick("proteimart")}
           >
             <ShoppingCart className="me-3" />
             ProteinMart
           </Link>
+
           <Link
             to="/forum"
-            className={`${activeLink === "proteinpedia"
+            className={`${location.pathname.startsWith("/forum")
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
-            onClick={() => handleLinkClick("proteinpedia")}
           >
             <Newspaper className="me-3" />
             ProteinPedia
           </Link>
+
           <Link
             to="/"
-            className={`${activeLink === "proteinbot"
+            className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
-            onClick={() => handleLinkClick("proteinbot")}
           >
             <Bot className="me-3" />
             ProteinBot
           </Link>
         </nav>
+
         {/* Sidebar User Info */}
         <div className="flex items-center mt-auto my-8 mx-5">
           <div className="flex flex-col text-left text-gray-500">
@@ -86,12 +82,11 @@ const AppsLayout = ({ children }) => {
             <p className="md:text-xs">mike.den@example.com</p>
           </div>
           <Link
-            to="/"
-            className={`${activeLink === "profile"
+            to="/profile"
+            className={`${location.pathname === "/profile"
               ? "text-[#45556C] font-bold"
               : "text-[#91A1BA]"
-              } hover:text-gray-950  ms-auto rounded-lg`}
-            onClick={() => handleLinkClick("profile")}
+              } hover:text-gray-950 ms-auto rounded-lg`}
           >
             <ChevronRight size={16} />
           </Link>
