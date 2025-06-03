@@ -57,7 +57,7 @@ const AppsLayout = ({ children }) => {
             ProteinMart
           </Link>
           <Link
-            to="/"
+            to="/forum"
             className={`${activeLink === "proteinpedia"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"

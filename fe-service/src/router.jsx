@@ -1,39 +1,46 @@
-// Router config
-import { createBrowserRouter } from 'react-router-dom';
-
-// Import your pages
-import HomePage from './pages/Home';
-import LoginPage from './features/rifqi-auth/pages/Login';
-import SignupPage from './features/rifqi-auth/pages/SignUp';
+import { createBrowserRouter } from "react-router-dom";
+import HomePage from "./pages/Home";
+import LoginPage from "./features/rifqi-auth/pages/Login";
+import SignupPage from "./features/rifqi-auth/pages/SignUp";
+import Forum from "./features/ribka-forum/pages/Forum";
+import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
 // import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <HomePage />,
     children: [
       {
         index: true,
         element: <HomePage />,
       },
-    //   {
-    //     path: 'protein-calculator',
-    //     element: <ProteinCalculatorPage />,
-    //   },
+      {
+        path: "/forum",
+        element: <Forum />,
+      },
+      {
+        path: "/forum/:id",
+        element: <ArticleDetail />,
+      },
+      //   {
+      //     path: 'protein-calculator',
+      //     element: <ProteinCalculatorPage />,
+      //   },
       // Add more protected routes here if needed
     ],
   },
   {
-    path: '/login',
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: '/signup', 
+    path: "/signup",
     element: <SignupPage />,
   },
   // Legacy auth route (redirect to login)
   {
-    path: '/auth',
+    path: "/auth",
     element: <LoginPage />,
   },
 ]);
