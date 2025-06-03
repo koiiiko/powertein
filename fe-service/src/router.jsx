@@ -5,22 +5,21 @@ import { createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/Home';
 import LoginPage from './features/rifqi-auth/pages/Login';
 import SignupPage from './features/rifqi-auth/pages/SignUp';
-import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
-import Layout from './components/layout';
+// import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <HomePage />,
     children: [
       {
         index: true,
         element: <HomePage />,
       },
-      {
-        path: 'protein-calculator',
-        element: <ProteinCalculatorPage />,
-      },
+    //   {
+    //     path: 'protein-calculator',
+    //     element: <ProteinCalculatorPage />,
+    //   },
       // Add more protected routes here if needed
     ],
   },
