@@ -1,30 +1,14 @@
 import React from 'react';
-import reactLogo from '@/assets/react.svg'
-import viteLogo from '/vite.svg'
-import { Link } from 'react-router-dom';
+import LoginForm from '../components/LoginForm';
 
 const Login = () => {
-    return (
-        <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
-            </div><h1>Vite + React</h1><div className="card">
-                <p>
-                    Edit <code>src/App.jsx</code> and save to test HMR
-                </p>
-                <Link to="/" className="hover:bg-blue-600">
-                    Home
-                </Link>
-            </div><p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
-    );
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <LoginForm />
+      </div>
+    </div>
+  );
 };
 
 export default Login;
