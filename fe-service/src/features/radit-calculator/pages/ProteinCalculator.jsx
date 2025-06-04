@@ -1,8 +1,6 @@
-jsx
 import React, { useState } from 'react';
 import Layout from '@/components/layout';
-import axios from 'axios'; 
-
+import axios from 'axios';
 const ProteinCalculator = () => {
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
@@ -10,23 +8,34 @@ const ProteinCalculator = () => {
   const [weight, setWeight] = useState('');
   const [activityLevel, setActivityLevel] = useState('');
   const [proteinResult, setProteinResult] = useState(null);
+  const [error, setError] = useState('');
   const [showResult, setShowResult] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.log('handleSubmit called');
     e.preventDefault();
+    setError(''); // Clear previous errors on new submission
+    setProteinResult(null); // Clear previous result
+
+    console.log('Before axios.post');
+    // Removed the misplaced console.log from here
     try {
-      const response = await axios.post('/api/radit-calculator/calculate', {
-        gender,
-        age,
-        height,
-        weight,
-        activityLevel,
+      // Convert string inputs to numbers
+      const numericAge = parseFloat(age);
+      const numericHeight = parseFloat(height);
+      const numericWeight = parseFloat(weight);
+      console.log('Sending data:', { gender, age: numericAge, height: numericHeight, weight: numericWeight, activityLevel }); // Added log for sent data
+      console.log('API endpoint:', 'http://localhost:5000/calculator/calculate'); // Added log for API endpoint
+      const response = await axios.post('http://localhost:5000/calculator/calculate', { 
+        gender, age: numericAge, height: numericHeight, weight: numericWeight, activityLevel,
       });
-      setProteinResult(response.data.protein);
+      setProteinResult(response.data.recommendedProtein);
       setShowResult(true);
+      setError(''); // Clear any previous errors
+      console.log('After axios.post');
     } catch (error) {
       console.error('Error calculating protein:', error);
-      // Handle error, show error message to user
+      setError('Failed to calculate protein. Please try again.'); // Set an error message      
     }
   };
 
@@ -46,6 +55,7 @@ const ProteinCalculator = () => {
         <h1 className="text-2xl font-bold mb-4">Protein Calculator</h1>
         {!showResult ? (
           <div className="bg-white p-6 rounded-lg shadow-md w-96 mx-auto">
+            {error && <div className="text-red-500 mb-4">{error}</div>} {/* Display error message */}
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-gray-700 mb-2" htmlFor="gender">
@@ -59,8 +69,8 @@ const ProteinCalculator = () => {
                   required
                 >
                   <option value="">Pilih Jenis Kelamin</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -73,7 +83,7 @@ const ProteinCalculator = () => {
                   className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                   placeholder="18 - 80"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  onChange={(e) => setAge(e.target.value)} // Keeping as string state for input
                   min="18"
                   max="80"
                   required
@@ -118,12 +128,11 @@ const ProteinCalculator = () => {
                   onChange={(e) => setActivityLevel(e.target.value)}
                   required
                 >
-                  <option value="">Berapa kali olahraga dalam seminggu</option>
-                  <option value="sedentary">Sedentary (Little or no exercise)</option>
-                  <option value="lightlyActive">Lightly Active (1-3 days/week exercise)</option>
-                  <option value="moderatelyActive">Moderately Active (3-5 days/week exercise)</option>
-                  <option value="veryActive">Very Active (6-7 days/week exercise)</option>
-                  <option value="extraActive">Extra Active (Very intense exercise daily)</option>
+                  <option value="aktivitasMinimal">Berapa kali olahraga dalam seminggu</option>
+                  <option value="aktivitasRendah">Rendah (1-3 hari/minggu)</option>
+                  <option value="aktivitasSedang">Sedang (3-5 hari/minggu)</option>
+                  <option value="aktivitasTinggi">Tinggi (6-7 hari/minggu)</option>
+                  <option value="aktivitasSangatTinggi">Sangat Tinggi (Olahraga Sangat Intens Setiap Hari)</option>
                 </select>
               </div>
               <button

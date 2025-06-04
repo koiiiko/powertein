@@ -20,8 +20,8 @@ const AppsLayout = ({ children }) => {
         {/* Sidebar Menu */}
         <nav className="flex flex-col gap-3 text-left mx-3">
           <Link
-            to="/"
-            className={`${location.pathname === "/"
+            to="/protein-calculator"
+            className={`${location.pathname === "/protein-calculator"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
@@ -31,7 +31,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/"
+            to="/protein-tracker" // Assuming a route for Protein Tracker
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
@@ -42,7 +42,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/"
+            to="/protein-mart" // Assuming a route for ProteinMart
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
@@ -64,7 +64,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/"
+            to="/protein-bot" // Assuming a route for ProteinBot
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"

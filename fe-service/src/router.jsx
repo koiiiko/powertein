@@ -5,7 +5,7 @@ import LoginPage from "./features/rifqi-auth/pages/Login";
 import HomePage from "./pages/Home";
 import Forum from "./features/ribka-forum/pages/Forum";
 import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
-// import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
+import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
 
 const router = createBrowserRouter([
   {
@@ -32,10 +32,10 @@ const router = createBrowserRouter([
     path: "/forum/:id",
     element: <ArticleDetail />,
   },
-  // {
-  //   path: "/calculator",
-  //   element: <ProteinCalculatorPage />,
-  // },
+  {
+    path: "/protein-calculator",
+    element: <ProteinCalculatorPage />,
+  },
 ]);
 
 export default router;
