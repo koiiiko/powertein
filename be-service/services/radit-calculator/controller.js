@@ -1,54 +1,74 @@
-const calculateProtein = (gender, age, height, weight, activityLevel) => {
+const con = require('../../database'); // Assuming the database connection is exported from database.js
+
+const calculateProtein = async (req, res) => {
+  const { gender, age, height, weight, activityLevel } = req.body;
+
   // Basic input validation
   if (!gender || !age || !height || !weight || !activityLevel) {
-    throw new Error('Missing required fields: gender, age, height, weight, and activity level are all required.');
+    return res.status(400).json({ error: 'Input tidak lengkap: jenis kelamin, usia, tinggi badan, berat badan, dan tingkat aktivitas semuanya wajib diisi.' });
   }
 
   if (typeof age !== 'number' || typeof height !== 'number' || typeof weight !== 'number') {
-    throw new Error('Age, height, and weight must be numbers.');
+    return res.status(400).json({ error: 'Usia, tinggi badan, dan berat badan harus berupa angka.' });
   }
 
   if (age < 18 || age > 80) {
-    throw new Error('Age must be between 18 and 80');
+    return res.status(400).json({ error: 'Usia harus antara 18 dan 80 tahun.' });
   }
 
   if (height <= 0 || weight <= 0 || height > 300 || weight > 1000) { // Added upper bounds
-    throw new Error('Height and weight must be positive values');
+    return res.status(400).json({ error: 'Tinggi badan dan berat badan harus bernilai positif.' });
   }
 
-  if (gender !== 'male' && gender !== 'female') {
-    throw new Error('Gender must be either "male" or "female".');
+  if (gender !== 'Laki-laki' && gender !== 'Perempuan') {
+    return res.status(400).json({ error: 'Jenis kelamin harus "Laki-laki" atau "Perempuan".' });
   }
 
-  // Simple protein calculation based on weight and activity level
-  // Activity levels (example multipliers):
-  // - Sedentary (little to no exercise): 1.2
-  // - Lightly active (exercise 1-3 days/week): 1.375
-  // - Moderately active (exercise 3-5 days/week): 1.55
-  // - Very active (exercise 6-7 days/week): 1.725
-  // - Extra active (very intense exercise or a physically demanding job): 1.9
+  // Mifflin-St Jeor Equation for BMR
+  let bmr;
+  if (gender === 'Laki-laki') {
+    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+  } else { // Perempuan
+    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+  }
 
+  // Activity Level Multipliers (Harris-Benedict Principle based)
   let activityMultiplier;
   switch (activityLevel) {
-    case 'sedentary': activityMultiplier = 0.8; break; // Corresponds to 0.8 g/kg
-    case 'minimally active': activityMultiplier = 1.0; break; // Corresponds to 1.0 g/kg
-    case 'moderately active': activityMultiplier = 1.2; break; // Corresponds to 1.2 g/kg
-    case 'very active': activityMultiplier = 1.5; break; // Corresponds to 1.5 g/kg
-    case 'extremely active': activityMultiplier = 2.0; break; // Corresponds to 2.0 g/kg
-    default: throw new Error('Invalid activity level');
+    case 'aktivitasMinimal': activityMultiplier = 1.2; break;
+    case 'aktivitasRendah': activityMultiplier = 1.375; break;
+    case 'aktivitasSedang': activityMultiplier = 1.55; break;
+    case 'aktivitasTinggi': activityMultiplier = 1.725; break;
+    case 'aktivitasSangatTinggi': activityMultiplier = 1.9; break;
+    default: return res.status(400).json({ error: 'Tingkat aktivitas tidak valid' });
   }
 
-  let recommendedProtein = weight * activityMultiplier;
+  // Total Daily Energy Expenditure (TDEE)
+  const tdee = bmr * activityMultiplier;
 
-  // Adjust for gender (women might need slightly less)
-  if (gender === 'female') {
-    recommendedProtein *= 0.9; // Reduce protein intake for women by 10% as an example
+  // Recommended Protein Intake (example: 20% of total calories)
+  // 1 gram of protein has approximately 4 calories
+  const recommendedProtein = (tdee * 0.20) / 4;
+
+  const userId = req.user.id; // Assuming user ID is available on req.user.id from authentication middleware
+
+  // Update the user's row in the database
+  const updateQuery = `
+    UPDATE users
+    SET gender = ?, age = ?, height = ?, weight = ?, activityLevel = ?, protein = ?
+    WHERE id = ?
+  `;
+
+  const proteinValue = Math.round(recommendedProtein * 10) / 10;
+
+  try {
+    await con.promise().query(updateQuery, [gender, age, height, weight, activityLevel, proteinValue, userId]);
+    console.log(`User ${userId} protein data updated successfully.`);
+    res.json({ recommendedProtein: proteinValue });
+  } catch (err) {
+    console.error('Error updating user protein data:', err);
+    res.status(500).json({ error: 'Failed to save protein data.' });
   }
-
-  // Round to a reasonable number of decimal places
-  recommendedProtein = Math.round(recommendedProtein * 10) / 10;
-
-  return recommendedProtein;
 };
 
 module.exports = {
