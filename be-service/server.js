@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const authService = require('./services/rifqi-auth');
 const raditCalculatorService = require('./services/radit-calculator');
+const forumService = require('./services/ribka-forum');
 
 const app = express();
 

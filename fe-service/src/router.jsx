@@ -3,9 +3,12 @@ import ProtectedRoute from "./components/protectedRoute";
 import SignupPage from "./features/rifqi-auth/pages/SignUp";
 import LoginPage from "./features/rifqi-auth/pages/Login";
 import HomePage from "./pages/Home";
+import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
 import Forum from "./features/ribka-forum/pages/Forum";
 import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
-import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
+import MyArticles from "./features/ribka-forum/pages/MyArticle";
+import CreateArticle from "./features/ribka-forum/pages/CreateArticle";
+import EditArticle from "./features/ribka-forum/pages/EditArticle";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,10 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/calculator",
+    element: <ProteinCalculatorPage />,
+  },
+  {
     path: "/forum",
     element: <Forum />,
   },
@@ -33,9 +40,19 @@ const router = createBrowserRouter([
     element: <ArticleDetail />,
   },
   {
-    path: "/protein-calculator",
-    element: <ProteinCalculatorPage />,
+    path: "/forum/new",
+    element: <CreateArticle />,
   },
+  {
+    path: "/forum/my",
+    element: <MyArticles />,
+  },
+
+  {
+    path: "/forum/edit/:id",
+    element: <EditArticle />,
+  },
+  
 ]);
 
 export default router;
