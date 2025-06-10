@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Powertein API' });
 });
-app.use('/auth', authService); // Assuming authService itself contains middleware
-app.use('/calculator', authService, raditCalculatorService); // Apply authService middleware to calculator routes
+app.use('/auth', authService);
+app.use('/calculator', authService, raditCalculatorService);
 app.use('/forum', forumService);
 
 
