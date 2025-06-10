@@ -1,22 +1,66 @@
 import { Link, useLocation } from "react-router-dom";
+import React, { useState } from 'react';
 import {
   Calculator,
   NotebookPen,
   ShoppingCart,
   Newspaper,
   Bot,
-  ChevronRight,
+  User,
+  LogOut,
+  ChevronUp
 } from "lucide-react";
+import {
+  Card,
+  CardBody,
+  Button
+} from '@heroui/react';
 
 const AppsLayout = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('authToken');
+
+  const handleLogout = async () => {
+    setLoading(true);
+
+    try {
+      // Call logout API
+      await fetch('http://localhost:5000/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Remove token and user data from localStorage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+
+      // Redirect to login
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if API fails, still logout locally
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const location = useLocation(); // <--- pakai ini untuk cek path aktif
 
   return (
     <div className="grid grid-cols-12 h-screen">
       {/* Sidebar */}
       <aside className="col-span-2 flex flex-col overflow-y-auto overflow-x-hidden text-center bg-[#F1F4F9]">
-        <h1 className="font-semibold text-gray-800 my-5 md:text-3xl">PowerTein</h1>
-
+        <a href="/">
+          <h1 className="font-semibold text-gray-800 my-5 md:text-3xl">PowerTein</h1>
+        </a>
         {/* Sidebar Menu */}
         <nav className="flex flex-col gap-3 text-left mx-3">
           <Link
@@ -76,26 +120,47 @@ const AppsLayout = ({ children }) => {
         </nav>
 
         {/* Sidebar User Info */}
-        <div className="flex items-center mt-auto my-8 mx-5">
-          <div className="flex flex-col text-left text-gray-500">
-            <p className="font-semibold text-gray-700 md:text-[14px]">Mike Den</p>
-            <p className="md:text-xs">mike.den@example.com</p>
+        <button className="flex items-center mt-auto my-8 mx-5" onClick={() => setIsOpen(!isOpen)}>
+          <div className="flex flex-col text-left text-gray-500 hover:text-gray-900 ">
+            <p className="font-semibold md:text-[14px]">{user.username}</p>
+            <p className="md:text-xs">{user.email}</p>
           </div>
-          <Link
-            to="/profile"
-            className={`${location.pathname === "/profile"
-              ? "text-[#45556C] font-bold"
-              : "text-[#91A1BA]"
-              } hover:text-gray-950 ms-auto rounded-lg`}
-          >
-            <ChevronRight size={16} />
-          </Link>
-        </div>
-      </aside>
+          <ChevronUp size={16} className={`mx-auto transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {
+          isOpen && (
+            <div className="flex mx-3 mt-[-20px]">
+              <div className="flex flex-col text-left mb-5 hover:text-gray-900 ">
+                {/* Profile Option */}
+                <a
+                  href="#"
+                  className="flex items-center space-x-3 w-full p-2 text-left transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <User className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm">Profile</span>
+                </a>
+                {/* Logout Option */}
+                <button
+                  onClick={handleLogout}
+                  disabled={loading}
+                  className="flex items-center space-x-3 w-full p-2 text-left transition-colors disabled:opacity-50"
+                >
+                  <LogOut className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm">
+                    {loading ? 'Logging out...' : 'Log Out'}
+                  </span>
+                </button>
+              </div>
+            </div>
+          )
+        }
+      </aside >
 
       {/* Content */}
-      <main className="col-span-10 overflow-y-auto p-6">{children}</main>
-    </div>
+      < main className="col-span-10 overflow-y-auto p-6" > {children}</main >
+    </div >
   );
 };
 

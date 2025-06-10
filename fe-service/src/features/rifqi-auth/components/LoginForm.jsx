@@ -42,7 +42,6 @@ const LoginForm = () => {
         
         // Success - redirect or handle success
         console.log('Login successful:', data);
-        alert('Login successful!');
         window.location.href = '/';
       } else {
         setError(data.error || 'Login failed');
