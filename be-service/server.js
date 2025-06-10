@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', authService); // Assuming authService itself contains middleware
 app.use('/calculator', authService, raditCalculatorService); // Apply authService middleware to calculator routes
+app.use('/forum', forumService);
+
 
 // Start server : http://localhost:5000/
 const PORT = process.env.PORT || 5000;
