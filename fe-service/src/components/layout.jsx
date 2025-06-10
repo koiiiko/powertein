@@ -38,8 +38,6 @@ const AppsLayout = ({ children }) => {
       // Remove token and user data from localStorage
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-
-      // Redirect to login
       window.location.href = '/login';
     } catch (error) {
       console.error('Logout error:', error);
@@ -64,8 +62,8 @@ const AppsLayout = ({ children }) => {
         {/* Sidebar Menu */}
         <nav className="flex flex-col gap-3 text-left mx-3">
           <Link
-            to="/protein-calculator"
-            className={`${location.pathname === "/protein-calculator"
+            to="/calculator"
+            className={`${location.pathname === "/calculator"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
               } hover:text-gray-900 p-2 flex md:text-[14px] rounded-lg`}
@@ -75,7 +73,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/protein-tracker" // Assuming a route for Protein Tracker
+            to="/tracker" // Assuming a route for Protein Tracker
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
@@ -86,7 +84,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/protein-mart" // Assuming a route for ProteinMart
+            to="/mart" // Assuming a route for ProteinMart
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
@@ -108,7 +106,7 @@ const AppsLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/protein-bot" // Assuming a route for ProteinBot
+            to="/bot" // Assuming a route for ProteinBot
             className={`${location.pathname === "/"
               ? "text-[#45556C] bg-white font-bold"
               : "text-[#91A1BA]"
