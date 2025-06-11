@@ -10,16 +10,6 @@ const Homepage = () => {
     <AppsLayout>
       <div className="">
         <h1 className="">Welcome to Powertein</h1>
-        <div className="">
-          <Button color="primary" as={Link} to="/auth">
-            <User size={22} /> Auth
-          </Button>
-          <hr />
-          <Button color="primary" as={Link} to="/auth" className="h-[1000px] ">
-            <User size={22} /> Auth
-          </Button>
-          <hr />
-        </div>
       </div>
     </AppsLayout>
   );
