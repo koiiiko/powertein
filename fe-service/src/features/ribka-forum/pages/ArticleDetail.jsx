@@ -32,10 +32,6 @@ const ArticleDetail = () => {
       );
       const articleReactions = reactions[id] || { likes: [], dislikes: [] };
 
-<<<<<<< Updated upstream
-      // Set counts
-=======
->>>>>>> Stashed changes
       setLikeCounts({
         likes: articleReactions.likes.length,
         dislikes: articleReactions.dislikes.length,
@@ -65,10 +61,6 @@ const ArticleDetail = () => {
     );
     const articleReactions = reactions[id] || { likes: [], dislikes: [] };
 
-<<<<<<< Updated upstream
-    // Remove user dari kedua array
-=======
->>>>>>> Stashed changes
     articleReactions.likes = articleReactions.likes.filter(
       (uid) => uid !== userId
     );
@@ -81,10 +73,6 @@ const ArticleDetail = () => {
     if (likeStatus === reactionType) {
       newStatus = null;
     } else {
-<<<<<<< Updated upstream
-      // Add to new reaction
-=======
->>>>>>> Stashed changes
       if (reactionType === "like") {
         articleReactions.likes.push(userId);
         newStatus = "like";
@@ -113,17 +101,7 @@ const ArticleDetail = () => {
     <AppsLayout>
       <div className="w-full px-2 md:px-4">
         <div className="mb-6">
-<<<<<<< Updated upstream
-          <button
-            onClick={() => navigate("/forum")}
-            className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span>Kembali</span>
-          </button>
-=======
           <BackButton />
->>>>>>> Stashed changes
         </div>
 
         {article.image && article.image !== "null" && (

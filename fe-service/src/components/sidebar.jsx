@@ -63,7 +63,7 @@ const items = [
   },
   {
     title: "ProteinMart",
-    url: "#",
+    url: "/mart",
     icon: ShoppingCartIcon,
   },
   {

@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     element: <EditArticle />,
   },
   { // New route for ProteinMart
-    path: "/protein-mart",
+    path: "/mart",
     element: (
         <ProductListPage />
     ),
