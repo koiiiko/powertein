@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
 app.use('/auth', authService);
 app.use('/calculator', authService, raditCalculatorService);
 app.use('/forum', forumService);
-
 app.use('/auzan-proteinmart', auzanProteinmartService); // Mount auzan-proteinmart router
 
 // Start server : http://localhost:5000/
