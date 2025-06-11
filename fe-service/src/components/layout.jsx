@@ -169,13 +169,13 @@ import { AppSidebar } from "@/components/sidebar";
 
 export default function AppsLayout({ children }) {
   return (
-    <div className="grid grid-cols-12 min-h-screen">
-      <div className="col-span-2">
+    <div className="flex min-h-screen">
+      <div className="w-64 flex-shrink-0 border-r bg-gray-50/40">
         <SidebarProvider>
           <AppSidebar />
         </SidebarProvider>
       </div>
-      <main className="col-span-10 px-4 py-8">{children}</main>
+      <main className="flex-1 overflow-auto px-4 py-8">{children}</main>
     </div>
   );
 }

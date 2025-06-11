@@ -16,7 +16,9 @@ const ArticleDetail = () => {
   useEffect(() => {
     const loadArticle = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/forum/articles/${id}`);
+        const response = await fetch(
+          `http://localhost:5000/forum/articles/${id}`
+        );
         const data = await response.json();
         setArticle(data);
       } catch (err) {
@@ -26,21 +28,23 @@ const ArticleDetail = () => {
 
     // Load reactions dari localStorage
     const loadReactionsFromStorage = () => {
-      const reactions = JSON.parse(localStorage.getItem('article_reactions') || '{}');
+      const reactions = JSON.parse(
+        localStorage.getItem("article_reactions") || "{}"
+      );
       const articleReactions = reactions[id] || { likes: [], dislikes: [] };
-      
+
       // Set counts
       setLikeCounts({
         likes: articleReactions.likes.length,
-        dislikes: articleReactions.dislikes.length
+        dislikes: articleReactions.dislikes.length,
       });
 
       // Set user reaction
       if (userId) {
         if (articleReactions.likes.includes(userId)) {
-          setLikeStatus('like');
+          setLikeStatus("like");
         } else if (articleReactions.dislikes.includes(userId)) {
-          setLikeStatus('dislike');
+          setLikeStatus("dislike");
         }
       }
     };
@@ -52,16 +56,22 @@ const ArticleDetail = () => {
   // Save reactions ke localStorage
   const saveReactionToStorage = (reactionType) => {
     if (!userId) {
-      alert('Anda harus login terlebih dahulu');
+      alert("Anda harus login terlebih dahulu");
       return;
     }
 
-    const reactions = JSON.parse(localStorage.getItem('article_reactions') || '{}');
+    const reactions = JSON.parse(
+      localStorage.getItem("article_reactions") || "{}"
+    );
     const articleReactions = reactions[id] || { likes: [], dislikes: [] };
 
     // Remove user dari kedua array
-    articleReactions.likes = articleReactions.likes.filter(uid => uid !== userId);
-    articleReactions.dislikes = articleReactions.dislikes.filter(uid => uid !== userId);
+    articleReactions.likes = articleReactions.likes.filter(
+      (uid) => uid !== userId
+    );
+    articleReactions.dislikes = articleReactions.dislikes.filter(
+      (uid) => uid !== userId
+    );
 
     let newStatus = null;
 
@@ -71,29 +81,29 @@ const ArticleDetail = () => {
       newStatus = null;
     } else {
       // Add to new reaction
-      if (reactionType === 'like') {
+      if (reactionType === "like") {
         articleReactions.likes.push(userId);
-        newStatus = 'like';
+        newStatus = "like";
       } else {
         articleReactions.dislikes.push(userId);
-        newStatus = 'dislike';
+        newStatus = "dislike";
       }
     }
 
     // Save to localStorage
     reactions[id] = articleReactions;
-    localStorage.setItem('article_reactions', JSON.stringify(reactions));
+    localStorage.setItem("article_reactions", JSON.stringify(reactions));
 
     // Update state
     setLikeStatus(newStatus);
     setLikeCounts({
       likes: articleReactions.likes.length,
-      dislikes: articleReactions.dislikes.length
+      dislikes: articleReactions.dislikes.length,
     });
   };
 
-  const handleLike = () => saveReactionToStorage('like');
-  const handleDislike = () => saveReactionToStorage('dislike');
+  const handleLike = () => saveReactionToStorage("like");
+  const handleDislike = () => saveReactionToStorage("dislike");
 
   if (!article) return <p>Memuat artikel...</p>;
 
@@ -103,7 +113,7 @@ const ArticleDetail = () => {
         {/* Back Button */}
         <div className="mb-6">
           <button
-            onClick={() => navigate('/forum')}
+            onClick={() => navigate("/forum")}
             className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ArrowLeft size={20} />
