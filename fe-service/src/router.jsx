@@ -9,6 +9,7 @@ import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
 import MyArticles from "./features/ribka-forum/pages/MyArticle";
 import CreateArticle from "./features/ribka-forum/pages/CreateArticle";
 import EditArticle from "./features/ribka-forum/pages/EditArticle";
+import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage"; // Import ProductListPage
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,12 @@ const router = createBrowserRouter([
   {
     path: "/forum/edit/:id",
     element: <EditArticle />,
+  },
+  { // New route for ProteinMart
+    path: "/mart",
+    element: (
+        <ProductListPage />
+    ),
   },
   
 ]);

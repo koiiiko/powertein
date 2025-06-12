@@ -4,7 +4,6 @@ import { Bold, Italic, Underline } from "lucide-react";
 export default function SimpleRichTextEditor({ value, onChange }) {
   const editorRef = useRef(null);
 
-  // Sinkronisasi isi editor hanya saat `value` dari luar berubah
   useEffect(() => {
     if (editorRef.current && editorRef.current.innerHTML !== value) {
       editorRef.current.innerHTML = value;
@@ -19,6 +18,17 @@ export default function SimpleRichTextEditor({ value, onChange }) {
   const handleInput = () => {
     onChange(editorRef.current.innerHTML);
   };
+
+  const countWords = (html) => {
+    if (!html) return 0;
+    const text = html
+      .replace(/<[^>]*>?/gm, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    return text ? text.split(" ").length : 0;
+  };
+
+  const wordCount = countWords(value);
 
   return (
     <div>
@@ -50,15 +60,22 @@ export default function SimpleRichTextEditor({ value, onChange }) {
         </button>
       </div>
 
-      {/* Editable div */}
-      <div
-        ref={editorRef}
-        contentEditable
-        onInput={handleInput}
-        className="w-full px-4 py-3 border-0 bg-[#F1F4F9] rounded-lg  transition-colors placeholder-gray-500"
-        style={{ outline: "none" }}
-        spellCheck={false}
-      />
+      <div className="relative">
+        {/* isi artikelnya */}
+        <div
+          ref={editorRef}
+          contentEditable
+          onInput={handleInput}
+          className="w-full px-4 py-3 border-0 bg-[#F1F4F9] rounded-lg transition-colors placeholder-gray-500 min-h-[200px]"
+          style={{ outline: "none" }}
+          spellCheck={false}
+        />
+
+        <div className="absolute bottom-2 right-2 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded
+                        hover:bg-white/90 transition-colors duration-200">
+          {wordCount} kata
+        </div>
+      </div>
     </div>
   );
 }

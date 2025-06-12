@@ -63,7 +63,7 @@ const items = [
   },
   {
     title: "ProteinMart",
-    url: "#",
+    url: "/mart",
     icon: ShoppingCartIcon,
   },
   {
@@ -127,7 +127,10 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarMenu className="p-2 gap-5">
           {items.map((item) => {
-            const isActive = location.pathname === item.url;
+            const isActive =
+              item.url === "#"
+                ? false
+                : location.pathname.startsWith(item.url) && item.url !== "/";
 
             return (
               <SidebarMenuItem key={item.title}>
@@ -172,7 +175,7 @@ export function AppSidebar() {
                   <div className="flex flex-col gap-0 font-medium">
                     {user.username}
                     <span className="text-xs font-normal text-gray-400">
-                      User@mail.com
+                      {user.email}
                     </span>
                   </div>
                   <ChevronUp className="ml-auto" />

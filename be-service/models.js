@@ -11,6 +11,8 @@ con.connect(function (err) {
   var articleSchema = "CREATE TABLE article (id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255) NOT NULL, user_id INT NOT NULL, username VARCHAR(50) NOT NULL, image BLOB, content TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id))";
   //add your create table schema here
 
+  var productSchema = "CREATE TABLE product (id INT PRIMARY KEY AUTO_INCREMENT, namaProduct VARCHAR(255) NOT NULL, image BLOB, harga VARCHAR(255), rating VARCHAR(10), deskripsi TEXT, kategori VARCHAR(50), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)";
+
   con.query(usersSchema, function (err, result) {
     if (err) throw err;
     console.log("Users table created");
@@ -18,6 +20,11 @@ con.connect(function (err) {
     con.query(articleSchema, function (err, result) {
       if (err) throw err;
       console.log("Article table created");
+
+      con.query(productSchema, function (err, result) {
+        if (err) throw err;
+        console.log("Product table created");
+      })
 
       //add your create table schema here
     });

@@ -3,7 +3,7 @@ const {
   getArticleById,
   addArticleToDB,
   updateArticleInDB,
-  deleteArticleFromDB
+  deleteArticleFromDB,
 } = require("./model");
 
 const fetchArticles = async (req, res) => {
@@ -54,7 +54,6 @@ const fetchArticleById = async (req, res) => {
 const createArticle = async (req, res) => {
   const { title, content, username, user_id, image } = req.body;
 
-  // Validasi awal
   if (!title || !content) {
     return res
       .status(400)
@@ -88,37 +87,48 @@ const updateArticle = async (req, res) => {
   const { id } = req.params;
   const { title, content, image } = req.body;
 
-  // Validasi awal
   if (!title || !content) {
-    return res.status(400).json({ message: 'Judul dan isi artikel tidak boleh kosong.' });
+    return res
+      .status(400)
+      .json({ message: "Judul dan isi artikel tidak boleh kosong." });
   }
   if (title.length < 10 || title.length > 50) {
-    return res.status(400).json({ message: 'Judul harus antara 10–50 karakter.' });
+    return res
+      .status(400)
+      .json({ message: "Judul harus antara 10–50 karakter." });
   }
 
-  // Hitung kata dari HTML content
-  const plainTextContent = content.replace(/<[^>]*>/g, '').trim();
+  const plainTextContent = content.replace(/<[^>]*>/g, "").trim();
   const wordCount = plainTextContent.split(/\s+/).length;
   if (wordCount < 300 || wordCount > 5000) {
-    return res.status(400).json({ message: 'Isi artikel harus antara 300–5000 kata.' });
+    return res
+      .status(400)
+      .json({ message: "Isi artikel harus antara 300–5000 kata." });
   }
 
   try {
-    // Cek apakah artikel ada
     const existingArticle = await getArticleById(id);
     if (!existingArticle) {
-      return res.status(404).json({ message: 'Artikel tidak ditemukan.' });
+      return res.status(404).json({ message: "Artikel tidak ditemukan." });
     }
 
-    // ← PERBAIKAN: Hanya update image jika ada image baru
-    const imageToUpdate = image ? image : existingArticle.image;
+    let imageToUpdate;
 
-    // Update artikel
+    if (image === null || image === "" || image === undefined) {
+      imageToUpdate = null;
+    } else if (typeof image === "string" && image.length > 0) {
+      imageToUpdate = image;
+    } else {
+      imageToUpdate = existingArticle.image;
+    }
+
     await updateArticleInDB({ id, title, content, image: imageToUpdate });
-    res.status(200).json({ message: 'Artikel berhasil diperbarui.' });
+    res.status(200).json({ message: "Artikel berhasil diperbarui." });
   } catch (error) {
-    console.error('Gagal mengupdate artikel:', error);
-    res.status(500).json({ message: 'Terjadi kesalahan saat mengupdate artikel.' });
+    console.error("Gagal mengupdate artikel:", error);
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat mengupdate artikel." });
   }
 };
 
@@ -126,37 +136,34 @@ const deleteArticle = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Cek apakah artikel ada
     const existingArticle = await getArticleById(id);
     if (!existingArticle) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Artikel tidak ditemukan.' 
+        message: "Artikel tidak ditemukan.",
       });
     }
 
-    // Hapus artikel
     const result = await deleteArticleFromDB(id);
-    
+
     if (result.affectedRows === 0) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Artikel tidak ditemukan atau sudah dihapus.' 
+        message: "Artikel tidak ditemukan atau sudah dihapus.",
       });
     }
 
     console.log(`Article ${id} deleted successfully`);
-    res.status(200).json({ 
+    res.status(200).json({
       success: true,
-      message: 'Artikel berhasil dihapus.' 
+      message: "Artikel berhasil dihapus.",
     });
-
   } catch (error) {
-    console.error('Error deleting article:', error);
-    res.status(500).json({ 
+    console.error("Error deleting article:", error);
+    res.status(500).json({
       success: false,
-      message: 'Terjadi kesalahan saat menghapus artikel.',
-      error: error.message 
+      message: "Terjadi kesalahan saat menghapus artikel.",
+      error: error.message,
     });
   }
 };
@@ -166,5 +173,5 @@ module.exports = {
   fetchArticleById,
   createArticle,
   updateArticle,
-  deleteArticle
+  deleteArticle,
 };
