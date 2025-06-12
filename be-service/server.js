@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Powertein API' });
 });
 app.use('/auth', authService);
-app.use('/calculator', authService, raditCalculatorService);
+app.use('/calculator', raditCalculatorService);
 app.use('/forum', forumService);
 
 

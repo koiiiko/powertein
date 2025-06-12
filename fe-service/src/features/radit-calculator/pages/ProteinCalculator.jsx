@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '@/components/layout';
 import axios from 'axios';
+
 const ProteinCalculator = () => {
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
@@ -17,17 +18,34 @@ const ProteinCalculator = () => {
     setError(''); // Clear previous errors on new submission
     setProteinResult(null); // Clear previous result
 
+    // Get user ID from localStorage
+    const user = JSON.parse(localStorage.getItem("user"));
+    const user_id = user?.id;
+
+    if (!user_id) {
+      setError('User not logged in.');
+      return;
+    }
+
     console.log('Before axios.post');
-    // Removed the misplaced console.log from here
     try {
       // Convert string inputs to numbers
       const numericAge = parseFloat(age);
       const numericHeight = parseFloat(height);
       const numericWeight = parseFloat(weight);
-      console.log('Sending data:', { gender, age: numericAge, height: numericHeight, weight: numericWeight, activityLevel }); // Added log for sent data
+
+      // Removed the mapping logic here, sending the raw gender value from state
+
+      console.log('Sending data:', { user_id, gender: gender, age: numericAge, height: numericHeight, weight: numericWeight, activityLevel }); // Added log for sent data
       console.log('API endpoint:', 'http://localhost:5000/calculator/calculate'); // Added log for API endpoint
-      const response = await axios.post('http://localhost:5000/calculator/calculate', { 
-        gender, age: numericAge, height: numericHeight, weight: numericWeight, activityLevel,
+
+      const response = await axios.post('http://localhost:5000/calculator/calculate', {
+        user_id, // Include user_id here
+        gender: gender, // Use the gender value directly from state
+        age: numericAge,
+        height: numericHeight,
+        weight: numericWeight,
+        activityLevel,
       });
       setProteinResult(response.data.recommendedProtein);
       setShowResult(true);
@@ -35,7 +53,7 @@ const ProteinCalculator = () => {
       console.log('After axios.post');
     } catch (error) {
       console.error('Error calculating protein:', error);
-      setError('Failed to calculate protein. Please try again.'); // Set an error message      
+      setError('Failed to calculate protein. Please try again.'); // Set an error message
     }
   };
 
@@ -128,11 +146,12 @@ const ProteinCalculator = () => {
                   onChange={(e) => setActivityLevel(e.target.value)}
                   required
                 >
-                  <option value="aktivitasMinimal">Berapa kali olahraga dalam seminggu</option>
+                  <option value="">Berapa kali olahraga dalam seminggu</option>
+                  <option value="aktivitasMinimal">Minimal (0 hari/minggu)</option>
                   <option value="aktivitasRendah">Rendah (1-3 hari/minggu)</option>
                   <option value="aktivitasSedang">Sedang (3-5 hari/minggu)</option>
                   <option value="aktivitasTinggi">Tinggi (6-7 hari/minggu)</option>
-                  <option value="aktivitasSangatTinggi">Sangat Tinggi (Olahraga Sangat Intens Setiap Hari)</option>
+                  <option value="aktivitasSangatTinggi">Sangat Tinggi (intens 7 hari/minggu)</option>
                 </select>
               </div>
               <button
