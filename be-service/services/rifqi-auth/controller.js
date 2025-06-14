@@ -55,7 +55,7 @@ class AuthController {
       // Verify password
       const isValidPassword = await AuthModel.verifyPassword(password, user.password);
       if (!isValidPassword) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ error: 'Wrong password' });
       }
 
       // Generate JWT
