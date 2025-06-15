@@ -73,7 +73,7 @@ const items = [
   },
   {
     title: "ProteinBot",
-    url: "#",
+    url: "/chatbot",
     icon: ChatBubbleLeftRightIcon,
   },
 ];

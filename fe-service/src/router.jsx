@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./components/protectedRoute";
 import SignupPage from "./features/rifqi-auth/pages/SignUp";
 import LoginPage from "./features/rifqi-auth/pages/Login";
+import Chatbot from "./features/rifqi-chatbot/pages/Chatbot";
 import HomePage from "./pages/Home";
 import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
 import Forum from "./features/ribka-forum/pages/Forum";
@@ -9,7 +10,7 @@ import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
 import MyArticles from "./features/ribka-forum/pages/MyArticle";
 import CreateArticle from "./features/ribka-forum/pages/CreateArticle";
 import EditArticle from "./features/ribka-forum/pages/EditArticle";
-import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage"; // Import ProductListPage
+import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage";
 
 const router = createBrowserRouter([
   {
@@ -53,13 +54,15 @@ const router = createBrowserRouter([
     path: "/forum/edit/:id",
     element: <EditArticle />,
   },
-  { // New route for ProteinMart
+  {
     path: "/mart",
-    element: (
-        <ProductListPage />
-    ),
+    element: <ProductListPage />,
   },
-  
+{
+    path: "/chatbot",
+    element: <Chatbot />,
+  },
+
 ]);
 
 export default router;
