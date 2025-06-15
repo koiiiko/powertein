@@ -4,7 +4,7 @@ const getAllArticles = () => {
   return new Promise((resolve, reject) => {
     con.query("SELECT * FROM article", (err, results) => {
       if (err) return reject(err);
-      console.log("DB results:", results);
+      // console.log("DB results:", results);
       resolve(results);
     });
   });
