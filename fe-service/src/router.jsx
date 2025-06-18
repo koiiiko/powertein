@@ -11,6 +11,7 @@ import MyArticles from "./features/ribka-forum/pages/MyArticle";
 import CreateArticle from "./features/ribka-forum/pages/CreateArticle";
 import EditArticle from "./features/ribka-forum/pages/EditArticle";
 import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage";
+import ProductDetailPage from "./features/auzan-proteinmart/pages/ProductDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -55,12 +56,20 @@ const router = createBrowserRouter([
     element: <EditArticle />,
   },
   {
-    path: "/mart",
-    element: <ProductListPage />,
-  },
-{
     path: "/chatbot",
     element: <Chatbot />,
+  },
+  {
+    path: "/mart",
+    element: (
+      <ProductListPage />
+    ),
+  },
+  {
+    path: "/mart/:productId",
+    element: (
+      <ProductDetailPage />
+    ),
   },
 
 ]);
