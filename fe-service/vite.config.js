@@ -10,12 +10,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: { // Add server configuration
-    proxy: { // Add proxy configuration
-      '/auzan-proteinmart': { // Requests starting with /auzan-proteinmart
-        target: 'http://localhost:5000', // Will be forwarded to http://localhost:5000
-        changeOrigin: true, // Helps with virtual hosted sites
-        rewrite: (path) => path.replace(/^\/auzan-proteinmart/, '/auzan-proteinmart'), // Rewrite path (optional, but good practice) - keep the /auzan-proteinmart path for the backend router
+  server: { // Add server configuration for development server
+    proxy: { // Configure proxies for API requests
+      // Proxy requests starting with /auzan-proteinmart to the backend server
+      '/auzan-proteinmart': {
+        target: 'http://localhost:5000', // Your backend server address
+        changeOrigin: true, // Change the origin of the host header to the target URL
+        // The rewrite rule is not strictly necessary here if the backend path is the same,
+        // but keeping it doesn't hurt and is good practice for clarity.
+        // It means a request to /auzan-proteinmart/products will be forwarded as /auzan-proteinmart/products
+        rewrite: (path) => path.replace(/^\/auzan-proteinmart/, '/auzan-proteinmart'),
       },
     }
   }

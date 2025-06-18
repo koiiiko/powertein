@@ -2,83 +2,71 @@
 // It will include fetching data from Tokopedia (or a stored source),
 // filtering, and searching.
 
-// Placeholder function to fetch products
+const { con } = require('../../database'); // Import database connection
+
+// Placeholder function to fetch products (list)
 async function getProducts({
   category,
   searchTerm
 }) {
-  // TODO: Implement integration with Tokopedia API or scraping.
-  // This could involve:
-  // 1. Calling external API/scraping function to get raw data.
-  // 2. Processing the raw data into a consistent format.
-  // 3. Storing/updating data in your local database (optional, but good for performance and daily updates).
-  // 4. Filtering/searching the products based on category and searchTerm.
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT id, namaProduct, image, harga, rating, deskripsi, kategori FROM product"; // Select only the columns needed for the list view
+    const conditions = [];
+    const values = [];
 
-  // For now, return mock data.
-  const mockProducts = [{
-    id: '1',
-    name: 'Whey Protein Isolate 1kg',
-    description: 'High-quality whey protein isolate.',
-    price: 450000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Whey'
-  }, {
-    id: '2',
-    name: 'Casein Protein 2kg',
-    description: 'Slow-digesting casein protein.',
-    price: 900000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Casein'
-  }, {
-    id: '3',
-    name: 'Vegan Protein Blend 750g',
-    description: 'Plant-based protein blend.',
-    price: 350000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Vegan'
-  }, {
-    id: '4',
-    name: 'Whey Protein Blend 750g',
-    description: 'Blend of whey proteins.',
-    price: 350000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Whey'
-  }, {
-    id: '5',
-    name: 'Casein Protein 1kg',
-    description: 'Slow-digesting casein protein.',
-    price: 450000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Casein'
-  }, {
-    id: '6',
-    name: 'Vegan Protein Isolate 1kg',
-    description: 'Plant-based protein isolate.',
-    price: 450000,
-    imageUrl: 'placeholder.jpg',
-    rating: 4.5,
-    category: 'Vegan'
-  }, // Add more mock data as needed
-  ];
+    if (category && category !== 'All') {
+      conditions.push("kategori = ?");
+      values.push(category);
+    }
 
-  let filteredProducts = mockProducts;
+    if (searchTerm) {
+      const searchTermPattern = `%${searchTerm}%`;
+      conditions.push("(namaProduct LIKE ? OR deskripsi LIKE ?)");
+      values.push(searchTermPattern, searchTermPattern);
+    }
 
-  if (category && category !== 'All') {
-    filteredProducts = filteredProducts.filter(product => product.category.toLowerCase() === category.toLowerCase());
-  }
+    if (conditions.length > 0) {
+      sql += " WHERE " + conditions.join(" AND ");
+    }
 
-  if (searchTerm) {
-    filteredProducts = filteredProducts.filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.description.toLowerCase().includes(searchTerm.toLowerCase()));
-  }
+    con.query(sql, values, (err, results) => {
+      if (err) {
+        console.error("Error fetching products from database:", err);
+        reject(err);
+        return;
+      }
 
-  return filteredProducts;
+      console.log(`Successfully fetched ${results.length} products from database`);
+      resolve(results); // Return the results
+    });
+  });
 }
+
+// New function to fetch a single product by ID
+async function getProductById(productId) {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM product WHERE id = ?"; // Select all columns for detail view
+        con.query(sql, [productId], (err, results) => {
+            if (err) {
+                console.error(`Error fetching product with ID ${productId} from database:`, err);
+                reject(err);
+                return;
+            }
+
+            if (results.length === 0) {
+                // Product not found
+                resolve(undefined);
+                return;
+            }
+
+            console.log(`Successfully fetched product with ID ${productId} from database:`, results[0]);
+            resolve(results[0]); // Return the first (and only) result
+        });
+    });
+}
+
 
 module.exports = {
   getProducts,
+  getProductById, // Export the new function
 };

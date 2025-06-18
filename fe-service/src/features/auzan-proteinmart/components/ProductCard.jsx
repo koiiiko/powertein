@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Import Link
 
 const ProductCard = ({ product }) => {
   // Ensure product data is available before rendering
@@ -6,28 +7,35 @@ const ProductCard = ({ product }) => {
     return null; // Or a loading/placeholder card
   }
 
+  // Check if product.rating is a valid number
+  const rating = parseFloat(product.rating);
+  const isValidRating = typeof rating === 'number' && !isNaN(rating);
+
   return (
-    <div className="border p-4 rounded-lg shadow h-full flex flex-col"> {/* Added h-full and flex-col for consistent height */}
+    <Link
+      to={`/mart/${product.id}`} // Link to the product detail page
+      className="border p-4 rounded-lg shadow h-full flex flex-col hover:shadow-lg transition-shadow block"
+    >
       {/* Use product.imageUrl from backend data */}
       {/* Added basic error handling for image loading */}
       <img
-        src={product.imageUrl || 'https://via.placeholder.com/150'}
-        alt={product.name}
-        className="w-full h-48 object-cover mb-4 rounded flex-shrink-0" // flex-shrink-0 prevents image from shrinking
-        onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/150'; }} // Fallback on error
+        src={product.image || 'https://via.placeholder.com/150'}
+        alt={product.namaProduct}
+        className="w-full h-48 object-cover mb-4 rounded flex-shrink-0"
+        onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/150'; }}
       />
-      <h2 className="text-lg font-semibold mb-2">{product.name}</h2> {/* Added mb-2 */}
-      {/* Added max-h-20 and overflow-hidden for description to prevent cards from stretching */}
-      <p className="text-gray-600 text-sm mb-4 flex-grow max-h-20 overflow-hidden">{product.description || 'No description available.'}</p> {/* Added flex-grow and mb-4 */}
-      <div className="flex justify-between items-center mt-auto"> {/* Added mt-auto to push to bottom */}
-        {/* Ensure price is formatted correctly */}
-        <span className="text-lg font-bold text-blue-600">Rp{product.price ? product.price.toLocaleString('id-ID') : 'N/A'}</span>
-        {/* Display rating */}
-        <span className="text-yellow-500 text-sm">
-          {product.rating ? '⭐'.repeat(Math.floor(product.rating)) + ` ${product.rating.toFixed(1)}` : 'No rating'}
-        </span>
+       <div className = "flex flex-col">
+
+      <h2 className="text-lg font-semibold mb-2 text-gray-800">{product.namaProduct}</h2>
+      <p className="text-gray-600 text-sm mb-4 flex-grow max-h-20 overflow-hidden">{product.deskripsi || 'No description available.'}</p>
+       <div className="text-yellow-500 text-sm whitespace-nowrap">
+       {isValidRating
+        ? '⭐'.repeat(Math.floor(rating)) + ` ${rating.toFixed(1)}`
+        : 'No rating'}
       </div>
-    </div>
+       <div className = "text-lg font-bold text-blue-600">Rp{product.harga ? product.harga.toLocaleString('id-ID') : 'N/A'}</div>
+         </div>
+    </Link>
   );
 };
 
