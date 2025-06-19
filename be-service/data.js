@@ -1,0 +1,53 @@
+//execute node data.js
+require("dotenv").config();
+const { con } = require("./database");
+
+con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected to database");
+
+    // Insert admin user (admin@powetein.com password)
+    var insertUser = `INSERT INTO users (username, email, password) VALUES ('Admin', 'admin@powertein.com', '$2b$10$UCynhffZLpxOAXWTT/xTe.8Mzrvp0t2jI.FD8baXCsZH6WCPTqnee')`;
+
+    // Insert article about daily protein requirements
+    var insertArticle = `INSERT INTO article (title, user_id, username, content) VALUES (
+        'Kebutuhan Protein Harian', 
+        1, 
+        'admin', 
+        '<div>Kebutuhan protein harian setiap orang berbeda-beda bergantung pada usia, jenis kelamin, serta berat badan. Kendati demikian, Menteri Kesehatan Republik Indonesia mengeluarkan Permenkes mengenai anjuran Angka Kecukupan Gizi (AKG) yang bisa dijadikan sebagai acuan dalam memenuhi kebutuhan protein harian tubuh.</div><div><br></div><div>Perlu diketahui terlebih dahulu, protein adalah salah satu zat gizi makro yang memiliki peran penting dalam proses pembentukan jaringan tubuh. Protein turut membantu pembentukan enzim yang dapat mengoptimalkan fungsi setiap organ di dalam tubuh. Inilah yang menjadi alasan pentingnya mencukupi kebutuhan protein harian tubuh.&nbsp;</div><div><br></div><div>Lantas, berapa kebutuhan protein harian tubuh yang perlu dicukupi? Mari simak ulasan selengkapnya dalam artikel berikut ini.</div><div><br></div><div><b>Fungsi Protein Bagi Tubuh</b></div><div>&nbsp;<span style="color: rgb(10, 10, 10);">Sebagai salah satu zat gizi makro, protein memiliki fungsi yang cukup signifikan di dalam tubuh. Protein ini nantinya akan dicerna menjadi asam amino yang digunakan untuk berbagai macam proses di dalam tubuh. Adapun sejumlah fungsi protein pada tubuh di antaranya:</span></div><div>- Membantu proses pembentukan sel dan jaringan tubuh yang baru.</div><div><span style="color: rgb(10, 10, 10);">- Memperbaiki sel dan jaringan tubuh yang rusak.</span></div><div><span style="color: rgb(10, 10, 10);">- Sebagai sumber asam amino.</span></div><div><span style="color: rgb(10, 10, 10);">- Menjaga kesehatan tulang dan otot.</span></div><div><span style="color: rgb(10, 10, 10);">- Mengoptimalkan sistem kekebalan tubuh.</span></div><div><span style="color: rgb(10, 10, 10);">- Menjaga fungsi kognitif otak.</span></div><div><span style="color: rgb(10, 10, 10);"><br></span></div><div><span style="color: rgb(10, 10, 10);"><b>Berapa Kebutuhan Protein Harian Tubuh?</b></span></div><div>Kebutuhan protein harian tubuh secara umum dapat dihitung berdasarkan berat badan. Cara menghitung kebutuhan protein harian berdasarkan berat badan adalah mengalikan 1 kilogram berat badan dengan 0,8 gram protein per hari. Jadi, jika Anda memiliki berat badan sebesar 55 kilogram, maka akan membutuhkan 44 gram protein per hari.</div><div><br></div><div>Selain itu, cara mengetahui kebutuhan protein harian lainnya adalah dengan mengikuti anjuran Angka Kecukupan Gizi (AKG) dari Menteri Kesehatan Republik Indonesia. Menurut AKG tahun 2019, kebutuhan protein harian setiap individu dibagi berdasarkan usia dan jenis kelamin. Berikut penjelasannya.</div><div><br></div><div><u>1. Kebutuhan Protein Bayi dan Anak-Anak</u></div><div>Ketika berusia 0 hingga 5 bulan, kebutuhan protein bayi dapat terpenuhi melalui ASI eksklusif. Karena itu, penting bagi ibu menyusui untuk mengonsumsi makanan dengan gizi seimbang agar menghasilkan ASI yang bernutrisi untuk bayi. Sementara itu, bayi yang telah berusia di atas 6 bulan bisa mendapatkan asupan protein tambahan dengan mengonsumsi MPASI atau makanan pendamping ASI.</div><div><br></div><div>Kebutuhan protein per hari untuk bayi dan anak-anak menurut AKG adalah sebagai berikut:</div><div>- Usia 0-5 bulan: 9 gram/hari.</div><div><span style="color: rgb(10, 10, 10);">- Usia 6-11 bulan: 15 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">- Usia 1-3 tahun: 20 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">- 4-6 tahun: 25 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">- 7-9 tahun: 40 gram/hari.</span></div><div><br></div><div><u>2. Kebutuhan Protein Laki-Laki</u></div><div>Bila sudah memasuki masa pubertas, kebutuhan protein harian cenderung bertambah dan menyesuaikan dengan jenis kelamin serta aktivitas sehari-hari. Bagi laki-laki, kebutuhan protein per hari yang dianjurkan yaitu:</div><div>- Usia 10-12 tahun: 50 gram/hari.</div><div><span style="color: rgb(10, 10, 10);">- Usia 13-15 tahun: 70 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">-&nbsp;</span><span style="color: rgb(10, 10, 10);">Usia 16-18 tahun: 75 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">- Usia 19-64 tahun: 65 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);">- 65 tahun ke atas: 64 gram/hari.</span></div><div><span style="color: rgb(10, 10, 10);"><br></span></div><div><u>3. Kebutuhan Protein Perempuan</u></div><div>Perempuan juga cenderung memerlukan lebih banyak protein saat sedang dalam masa pubertas. Namun, kebutuhan protein ini akan berangsur menurun seiring dengan pertambahan usia. Adapun kebutuhan protein perempuan per hari yaitu:</div><div>- Usia 10-12 tahun: 55 gram/hari.</div><div>- Usia 13-18 tahun: 65 gram/hari.</div><div>- Usia 19-64 tahun: 60 gram/hari.</div><div>- 65 tahun ke atas: 58 gram/hari.</div><div><br></div><div><u>4. Kebutuhan Protein Ibu Hamil dan Menyusui</u></div><div>Ibu hamil cenderung memerlukan protein lebih banyak guna menyokong proses pertumbuhan dan perkembangan janin di dalam kandungan. Tak hanya ibu hamil, ibu menyusui juga memerlukan asupan protein yang cukup agar menghasilkan ASI berkualitas untuk bayinya. Berikut penjelasan mengenai kebutuhan protein bagi ibu hamil dan menyusui.</div><div><br></div><div>- Kehamilan trimester 1: +1 gram dari kebutuhan protein di usianya.</div><div><br></div><div>- Kehamilan trimester 2: +10 gram dari kebutuhan protein di usianya.</div><div><br></div><div>- Kehamilan trimester 3: +30 gram dari kebutuhan protein di usianya.</div><div><br></div><div>- Menyusui 6 bulan pertama: +20 gram dari kebutuhan protein di usianya.</div><div><br></div><div>- Menyusui 6 bulan kedua: +15 gram dari kebutuhan protein di usianya.</div><div><br></div><div><b>Tips Memenuhi Kebutuhan Protein Harian</b></div><div>&nbsp;<span style="color: rgb(10, 10, 10);">Pada dasarnya, kebutuhan protein harian tubuh dapat dipenuhi dengan mengonsumsi makanan tinggi protein dalam jumlah yang cukup, baik sumber protein hewani maupun sumber protein nabati. Berikut tips memenuhi kebutuhan protein harian yang dapat dilakukan:</span></div><div>- Mengonsumsi sumber protein hewani yang cukup, seperti daging-dagingan, telur, atau susu. Anda juga dapat memenuhi kebutuhan protein dengan mengonsumsi sumber protein nabati, seperti biji-bijian, kacang-kacangan, gandum, tempe, dan tahu.</div><div><span style="color: rgb(10, 10, 10);">- Menyediakan makanan tinggi protein pada menu makanan sehari-hari.</span></div><div><span style="color: rgb(10, 10, 10);">- Mengonsumsi produk olahan susu, seperti yogurt, keju, serta kefir.</span></div><div><span style="color: rgb(10, 10, 10);">- Bila sedang menjalani program pembentukan massa otot, Anda disarankan untuk mengonsumsi protein shake atau susu tinggi protein.</span></div><div><br></div><div>Dapat disimpulkan bahwa kebutuhan protein harian penting untuk dicukupi guna menyokong proses metabolisme serta pembentukan jaringan di dalam tubuh.</div>'
+    )`;
+
+    var insertProduct = `INSERT INTO product (id, namaProduct, image, harga, rating, deskripsi, kategori, tokopediaLink, created_at, updated_at, reviewCount, brand, weight, flavors) VALUES (NULL, 'ON Optimum Nutrition Whey Gold Standard 5 lbs Whey Protein Isolate', 'https://images.tokopedia.net/img/cache/500-square/VqbcmM/2024/1/15/37b7308c-db28-4c2c-9392-b9d1b3bef353.jpg.webp?ect=4g', '1.350.000', '5.0', 'Whey Isolate terbuat dari bahan utama dalam Gold Standard 100% Whey\r\nMengandung 4 gr glutamine, 5 gr BCAA.\r\nProduk ini mengandung EAA sebanyak 11 gram yang dapat membantu pemulihan otot setelah latihan fisik.\r\nMengandung sangat sedikit laktosa, lemak, kolesterol\r\n\r\nManfaat\r\nDalam 1 serving Optimum Nutrition Whey Gold protein mengandung 24 gram protein, 100% whey protein, 120 kalori, 1 gram fat, Whey Protein Isolate, Whey Concentrate, dan Hydrolyzed Whey Isolate.\r\nMeningkatkan daya tahan tubuh\r\nMembantu meningkatkan pertumbuhan massa otot tanpa adanya penumpukan lemak\r\nMencegah penyusutan massa otot.\r\nMembantu memulihkan cidera otot setelah melakukan latihan secara maksimal\r\nMembentuk massa otot lebih terdefinisi dan kering\r\n\r\nKeunggulan\r\nProduk whey dengan kualitas premium dengan harga yang terjangkau\r\nMengandung glutamine dan BCAA yang dapat membantu memulihkan cedera otot setelah latihan\r\nSangat cepat diserap oleh tubuh\r\nMemiliki rasa yang enak dan mudah untuk dikonsumsi\r\nGluten-free', 'Whey', 'https://www.tokopedia.com/rocketslippers/on-optimum-nutrition-whey-gold-standard-5-lbs-whey-protein-isolate-wgs-milk-chocolate-tanpa-bonus-918be?extParam=ivf%3Dtrue%26keyword%3Dwhey+protein+isolate%26search_id%3D20250614151932D947BF06A885DB1B0FN3%26src%3Dsearch&t_id=1749914393401&t_st=1&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result', '2025-06-15 00:26:14', '2025-06-15 16:56:34', '620', 'Optimum Nutrition', '5 lbs (2.27 kg)', 'Milk Chocolate, Chocolate, Vanilla, Choco Peanut B., French Vanilla, Salted Caramel')`
+
+    con.query(insertUser, function (err, result) {
+        if (err) {
+            console.error("Error inserting user:", err);
+            return;
+        }
+        console.log("Admin user created successfully");
+
+        con.query(insertArticle, function (err, result) {
+            if (err) {
+                console.error("Error inserting article:", err);
+                return;
+            }
+            console.log("Article created successfully");
+
+            con.query(insertProduct, function (err, result) {
+                if (err) {
+                    console.error("Error inserting product:", err);
+                    return;
+                }
+                console.log("Article created successfully");
+
+                con.end(function (err) {
+                    if (err) {
+                        console.error("Error closing connection:", err);
+                        return;
+                    }
+                    console.log("Database connection closed");
+                });
+            });
+        });
+    });
+});

@@ -36,7 +36,7 @@ async function getProducts({
         return;
       }
 
-      console.log(`Successfully fetched ${results.length} products from database`);
+      console.log(`Successfully fetched products from database`);
       resolve(results); // Return the results
     });
   });
@@ -59,7 +59,7 @@ async function getProductById(productId) {
                 return;
             }
 
-            console.log(`Successfully fetched product with ID ${productId} from database:`, results[0]);
+            console.log(`Successfully fetched product with ID from database`);
             resolve(results[0]); // Return the first (and only) result
         });
     });
