@@ -73,7 +73,7 @@ const ProductDetailPage = () => {
       <div className="container mx-auto p-4">
         {/* Breadcrumb - Example structure, adjust as needed */}
         <div className="text-sm text-gray-600 mb-4">
-          <Link to="/" className="hover:underline">Home (PowerTein)</Link>
+          <Link to="/calculator" className="hover:underline">Home (PowerTein)</Link>
           &gt;
           <Link to="/mart" className="hover:underline">Katalog Produk</Link>
           &gt; {product ? product.namaProduct : '...'}
