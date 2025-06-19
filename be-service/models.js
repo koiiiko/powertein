@@ -14,7 +14,7 @@ con.connect(function (err) {
   //add your create table schema here
 
   var productSchema =
-    "CREATE TABLE product (id INT PRIMARY KEY AUTO_INCREMENT, namaProduct VARCHAR(255) NOT NULL, image BLOB, harga VARCHAR(255), rating VARCHAR(10), deskripsi TEXT, kategori VARCHAR(50), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)";
+    "CREATE TABLE product (id INT PRIMARY KEY AUTO_INCREMENT, namaProduct VARCHAR(255) NOT NULL, image TEXT, harga VARCHAR(255), rating DECIMAL(3,1), deskripsi TEXT, kategori VARCHAR(50), tokopediaLink TEXT, reviewCount INT, brand VARCHAR(255), weight VARCHAR(50), flavors VARCHAR(255), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)";
 
   var foodSchema =
     "CREATE TABLE IF NOT EXIST food_nutrition (id INT PRIMARY KEY AUTO_INCREMENT, namaMakanan VARCHAR(255) NOT NULL, protein FLOAT NOT NULL, created_at TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)";
