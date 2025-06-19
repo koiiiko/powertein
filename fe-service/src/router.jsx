@@ -32,43 +32,70 @@ const router = createBrowserRouter([
   },
   {
     path: "/calculator",
-    element: <ProteinCalculatorPage />,
+    element: (
+      <ProtectedRoute>
+        <ProteinCalculatorPage />
+      </ProtectedRoute>),
   },
   {
     path: "/forum",
-    element: <Forum />,
+    element: (
+      <ProtectedRoute>
+        <Forum />
+      </ProtectedRoute>),
   },
   {
     path: "/forum/:id",
-    element: <ArticleDetail />,
+    element: (
+      <ProtectedRoute>
+        <ArticleDetail />
+      </ProtectedRoute>),
   },
   {
     path: "/forum/new",
-    element: <CreateArticle />,
+    element: (
+      <ProtectedRoute>
+        <CreateArticle />
+      </ProtectedRoute>),
   },
   {
     path: "/forum/my",
-    element: <MyArticles />,
+    element: (
+      <ProtectedRoute>
+        <MyArticles />
+      </ProtectedRoute>),
   },
 
   {
     path: "/forum/edit/:id",
-    element: <EditArticle />,
+    element: (
+      <ProtectedRoute>
+        <EditArticle />
+      </ProtectedRoute>),
   },
   {
     path: "/chatbot",
-    element: <Chatbot />,
+    element: (
+      <ProtectedRoute>
+        <Chatbot />
+      </ProtectedRoute>),
   },
   {
     path: "/mart",
     element: (
-      <ProductListPage />
+      <ProtectedRoute>
+        <ProductListPage />
+      </ProtectedRoute>
+
     ),
   },
   {
     path: "/mart/:productId",
     element: (
-      <ProductDetailPage />
+      <ProtectedRoute>
+        <ProductDetailPage />
+      </ProtectedRoute>
+
     ),
   },
 

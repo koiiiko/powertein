@@ -1,5 +1,23 @@
 # PowerTein Apps Repository
 
+### Developed by:
+
+- Ribka Devina M.
+`ProteinPedia - Forum`
+
+- Naufal Firjatulloh F.
+`Protein Tracker - Tracker`
+
+- Auzan Taqi S.
+`ProteinMart - Mart`
+
+- Muhammad Rifqi H.
+`Auth - Registration/Credentials`
+`ProteinBot - AI ChatBot`
+
+- Raditya Pratama
+`Protein Calculator - Calculator`
+
 ### How to run this project on local device
 First, clone this repo into your IDE, then follow these instructions for each service:
 

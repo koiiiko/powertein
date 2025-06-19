@@ -115,7 +115,7 @@ export function AppSidebar() {
   return (
     <Sidebar variant="floating" className="bg-white">
       <SidebarHeader className="p-4 mb-4">
-        <a href="/" className="block">
+        <a href="" className="block">
           <img
             src={Logo}
             alt="Powertein Logo"

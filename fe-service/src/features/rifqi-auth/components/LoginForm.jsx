@@ -43,7 +43,7 @@ const LoginForm = () => {
 
         // Success - redirect or handle success
         console.log('Login successful:', data);
-        window.location.href = '/';
+        window.location.href = '/calculator';
       } else {
         setError(data.error || 'Login failed');
       }
