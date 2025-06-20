@@ -18,7 +18,6 @@ export default defineConfig({
     port: process.env.PORT,
     // Add server configuration for development server
     proxy: {
-      // Configure proxies for API requests
       // Proxy requests starting with /auzan-proteinmart to the backend server
       "/auzan-proteinmart": {
         target: "http://localhost:5000", // Your backend server address
