@@ -58,7 +58,7 @@ const items = [
   },
   {
     title: "Protein Tracker",
-    url: "#",
+    url: "/tracker",
     icon: ClipboardDocumentCheckIcon,
   },
   {

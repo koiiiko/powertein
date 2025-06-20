@@ -23,17 +23,6 @@ const getFoodListSearch = (search) => {
   });
 };
 
-// Get protein level user
-const getProteinUser = (userId) => {
-  return new Promise((resolve, reject) => {
-    const query = "SELECT protein FROM users WHERE id = ?";
-    con.query(query, [userId], (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0]);
-    });
-  });
-};
-
 // Store user consume record
 const storeConsumeRecord = (userId, nama_makanan, porsi, protein) => {
   return new Promise((resolve, reject) => {
@@ -92,15 +81,17 @@ const getConsumeRecordByUserId = (userId) => {
 };
 
 // Get user consume record based period
-const getConsumeRecordByPeriod = (userId, startDate, endDate) => {
+const getConsumeRecordByPeriod = (userId, period) => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT (protein * jumlahPorsi) AS totalProtein, date
+      SELECT SUM(protein * jumlahPorsi) AS totalProtein, date
       FROM user_consume 
-      WHERE user_id = ? 
-      AND date BETWEEN ? AND ?
+      WHERE user_id = ? AND DATE(date) < CURDATE()
+      GROUP BY date
+      ORDER BY date DESC
+      LIMIT ?
     `;
-    con.query(query, [userId, startDate, endDate], (err, results) => {
+    con.query(query, [userId, period], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
@@ -125,7 +116,6 @@ const getConsumeRecordByTimestamp = (userId, timestamp) => {
 
 module.exports = {
   getFoodListSearch,
-  getProteinUser,
   storeConsumeRecord,
   getUserConsumeToday,
   getConsumeRecordByUserId,

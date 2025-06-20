@@ -2,7 +2,9 @@ const express = require("express");
 const {
   fetchFoodListSearch,
   saveUserConsume,
-  userConsumeToday,
+  displayUserConsumeToday,
+  displayUserConsumeHistory,
+  displayUserConsumeDetails,
   deleteUserConsume,
 } = require("./controller");
 
@@ -10,7 +12,9 @@ const router = express.Router();
 
 router.get("/search", fetchFoodListSearch);
 router.post("/save", saveUserConsume);
-router.get("/today", userConsumeToday);
+router.get("/today/:userId", displayUserConsumeToday);
+router.get("/history/:period", displayUserConsumeHistory);
+router.get("/history/:timestamp", displayUserConsumeDetails);
 router.delete("/delete/:id", deleteUserConsume);
 
 module.exports = router;
