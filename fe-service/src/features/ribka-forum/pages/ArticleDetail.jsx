@@ -7,7 +7,6 @@ import {
   Calendar,
   User,
   AlertCircle,
-  Home,
 } from "lucide-react";
 import BackButton from "../components/HandleBack";
 
@@ -22,16 +21,18 @@ const ArticleDetail = () => {
     username: "",
     image: null,
     id: null,
+    like_count: 0,
+    dislike_count: 0,
+    userReaction: null,
   });
 
   const [searchParams] = useSearchParams();
   const fromPage = searchParams.get("from");
 
-  const [likeStatus, setLikeStatus] = useState(null);
-  const [likeCounts, setLikeCounts] = useState({ likes: 0, dislikes: 0 });
   const [dataLoaded, setDataLoaded] = useState(false);
   const [articleNotFound, setArticleNotFound] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
+  const [reactionLoading, setReactionLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
@@ -54,12 +55,18 @@ const ArticleDetail = () => {
         }
 
         const data = await response.json();
+        console.log("Data from backend:", data); // Debug log
 
         // Jika data kosong atau null, anggap artikel tidak ditemukan
         if (!data || !data.id) {
           setArticleNotFound(true);
         } else {
-          setArticle(data);
+          setArticle({
+            ...data,
+            like_count: data.like_count || 0,
+            dislike_count: data.dislike_count || 0,
+            userReaction: null, // Will be set by loadReactionsFromStorage
+          });
         }
 
         setDataLoaded(true);
@@ -71,73 +78,147 @@ const ArticleDetail = () => {
     };
 
     const loadReactionsFromStorage = () => {
+      if (!userId) return;
+
       const reactions = JSON.parse(
         localStorage.getItem("article_reactions") || "{}"
       );
-      const articleReactions = reactions[id] || { likes: [], dislikes: [] };
+      const articleReactions = reactions[id];
 
-      setLikeCounts({
-        likes: articleReactions.likes.length,
-        dislikes: articleReactions.dislikes.length,
-      });
-
-      if (userId) {
-        if (articleReactions.likes.includes(userId)) {
-          setLikeStatus("like");
-        } else if (articleReactions.dislikes.includes(userId)) {
-          setLikeStatus("dislike");
+      if (articleReactions) {
+        if (articleReactions.likes && articleReactions.likes.includes(userId)) {
+          setArticle((prev) => ({ ...prev, userReaction: "like" }));
+        } else if (
+          articleReactions.dislikes &&
+          articleReactions.dislikes.includes(userId)
+        ) {
+          setArticle((prev) => ({ ...prev, userReaction: "dislike" }));
         }
       }
     };
 
-    loadArticle();
-    loadReactionsFromStorage();
-  }, [id, userId]);
+    // Load article first, then load reactions
+    loadArticle().then(() => {
+      // Only load reactions after article is loaded
+      setTimeout(() => {
+        loadReactionsFromStorage();
+      }, 100);
+    });
+  }, [id, userId]); // Remove dataLoaded dependency
 
-  const saveReactionToStorage = (reactionType) => {
+  const handleReaction = async (reactionType) => {
     if (!userId) {
       alert("Anda harus login terlebih dahulu");
       return;
     }
 
-    const reactions = JSON.parse(
-      localStorage.getItem("article_reactions") || "{}"
-    );
-    const articleReactions = reactions[id] || { likes: [], dislikes: [] };
+    if (reactionLoading) return; // Prevent multiple clicks
 
-    articleReactions.likes = articleReactions.likes.filter(
-      (uid) => uid !== userId
-    );
-    articleReactions.dislikes = articleReactions.dislikes.filter(
-      (uid) => uid !== userId
-    );
+    setReactionLoading(true);
 
-    let newStatus = null;
+    try {
+      // Cek reaksi user saat ini dari localStorage
+      const reactions = JSON.parse(
+        localStorage.getItem("article_reactions") || "{}"
+      );
+      const articleReactions = reactions[id] || { likes: [], dislikes: [] };
 
-    if (likeStatus === reactionType) {
-      newStatus = null;
-    } else {
-      if (reactionType === "like") {
-        articleReactions.likes.push(userId);
-        newStatus = "like";
-      } else {
-        articleReactions.dislikes.push(userId);
-        newStatus = "dislike";
+      const hasLiked = articleReactions.likes.includes(userId);
+      const hasDisliked = articleReactions.dislikes.includes(userId);
+      const currentReaction = hasLiked
+        ? "like"
+        : hasDisliked
+        ? "dislike"
+        : null;
+
+      console.log("Current reaction:", currentReaction);
+      console.log("New reaction:", reactionType);
+
+      // Tentukan action berdasarkan state saat ini
+      let action = "add";
+      let newUserReaction = reactionType;
+
+      if (currentReaction === reactionType) {
+        // User menekan tombol yang sama, hapus reaksi
+        action = "remove";
+        newUserReaction = null;
+      } else if (currentReaction && currentReaction !== reactionType) {
+        // User ganti reaksi - backend akan handle remove old + add new
+        // Di frontend tetap action = "add", tapi update localStorage untuk remove old reaction
+        action = "add";
+        newUserReaction = reactionType;
       }
+
+      console.log("Final action:", action);
+
+      // Kirim request ke backend
+      const response = await fetch(
+        `http://localhost:5000/forum/articles/${id}/reaction`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            reactionType: reactionType,
+            action: action,
+            currentReaction: currentReaction, // Kirim info reaksi saat ini ke backend
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Gagal memproses reaksi");
+      }
+
+      const result = await response.json();
+      console.log("Backend response:", result);
+
+      if (result.success) {
+        // Update localStorage
+        articleReactions.likes = articleReactions.likes.filter(
+          (uid) => uid !== userId
+        );
+        articleReactions.dislikes = articleReactions.dislikes.filter(
+          (uid) => uid !== userId
+        );
+
+        if (newUserReaction === "like") {
+          articleReactions.likes.push(userId);
+        } else if (newUserReaction === "dislike") {
+          articleReactions.dislikes.push(userId);
+        }
+
+        reactions[id] = articleReactions;
+        localStorage.setItem("article_reactions", JSON.stringify(reactions));
+
+        // Update state
+        setArticle((prevArticle) => ({
+          ...prevArticle,
+          like_count: result.data.likes,
+          dislike_count: result.data.dislikes,
+          userReaction: newUserReaction,
+        }));
+
+        console.log("Final state update:", {
+          likes: result.data.likes,
+          dislikes: result.data.dislikes,
+          userReaction: newUserReaction,
+        });
+      } else {
+        alert(result.message || "Terjadi kesalahan");
+      }
+    } catch (error) {
+      console.error("Error handling reaction:", error);
+      alert("Terjadi kesalahan saat memproses reaksi");
+    } finally {
+      setReactionLoading(false);
     }
-
-    reactions[id] = articleReactions;
-    localStorage.setItem("article_reactions", JSON.stringify(reactions));
-
-    setLikeStatus(newStatus);
-    setLikeCounts({
-      likes: articleReactions.likes.length,
-      dislikes: articleReactions.dislikes.length,
-    });
   };
 
-  const handleLike = () => saveReactionToStorage("like");
-  const handleDislike = () => saveReactionToStorage("dislike");
+  const handleLike = () => handleReaction("like");
+  const handleDislike = () => handleReaction("dislike");
 
   // Tampilan ketika artikel tidak ditemukan
   if (dataLoaded && articleNotFound) {
@@ -160,7 +241,6 @@ const ArticleDetail = () => {
               className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-200 max-w-md w-full
                             transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
             >
-              {/* Icon */}
               <div
                 className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6
                               animate-pulse"
@@ -168,18 +248,15 @@ const ArticleDetail = () => {
                 <AlertCircle size={40} className="text-red-500" />
               </div>
 
-              {/* Title */}
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                 Artikel Tidak Ditemukan
               </h1>
 
-              {/* Description */}
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Maaf, artikel yang Anda cari tidak dapat ditemukan. Artikel
                 mungkin telah dihapus atau URL yang Anda akses tidak valid.
               </p>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={() => (window.location.href = "/forum")}
@@ -218,7 +295,6 @@ const ArticleDetail = () => {
               className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-200 max-w-md w-full
                             transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
             >
-              {/* Icon */}
               <div
                 className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6
                               animate-pulse"
@@ -226,18 +302,15 @@ const ArticleDetail = () => {
                 <AlertCircle size={40} className="text-orange-500" />
               </div>
 
-              {/* Title */}
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                 Terjadi Kesalahan
               </h1>
 
-              {/* Description */}
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Maaf, terjadi kesalahan saat memuat artikel. Silakan coba lagi
                 dalam beberapa saat.
               </p>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={() => window.location.reload()}
@@ -280,7 +353,7 @@ const ArticleDetail = () => {
           />
         </div>
 
-        {/* Article Header Image - hanya muncul jika ada gambar DAN data sudah loaded */}
+        {/* Article Header Image */}
         {dataLoaded && article.image && article.image !== "null" && (
           <div
             className="w-full bg-gray-200 rounded-xl mb-8 overflow-hidden shadow-lg hover:shadow-2xl 
@@ -314,7 +387,7 @@ const ArticleDetail = () => {
           ></div>
 
           <div className="relative z-10">
-            {/* Title - tampilkan placeholder jika kosong */}
+            {/* Title */}
             <h1
               className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight 
                            group-hover:text-gray-800 transition-colors duration-300 min-h-[3rem]"
@@ -375,18 +448,18 @@ const ArticleDetail = () => {
               )}
             </div>
 
-            {/* Action Buttons - selalu tampil */}
+            {/* Action Buttons */}
             <div
               className="flex items-center gap-4 pt-6 border-t border-gray-200 group-hover:border-gray-300 
                             transition-colors duration-300"
             >
               <button
                 onClick={handleLike}
-                disabled={!dataLoaded}
+                disabled={!dataLoaded || reactionLoading}
                 className={`group/like flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-200 
                            transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2
                            shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                             likeStatus === "like"
+                             article.userReaction === "like"
                                ? "bg-green-50 border-green-200 text-green-700 focus:ring-green-500 shadow-green-100"
                                : "bg-white border-gray-200 text-gray-600 hover:bg-green-50 hover:border-green-200 hover:text-green-600 focus:ring-green-500"
                            }`}
@@ -394,28 +467,28 @@ const ArticleDetail = () => {
                 <ThumbsUp
                   size={20}
                   className={`transition-all duration-200 group-hover/like:scale-110 ${
-                    likeStatus === "like" ? "fill-current" : ""
+                    article.userReaction === "like" ? "fill-current" : ""
                   }`}
                 />
                 <span className="font-medium">Suka</span>
                 <span
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
-                    likeStatus === "like"
+                    article.userReaction === "like"
                       ? "bg-green-100 text-green-700"
                       : "bg-gray-100 text-gray-600 group-hover/like:bg-green-100 group-hover/like:text-green-600"
                   }`}
                 >
-                  {likeCounts.likes}
+                  {article.like_count}
                 </span>
               </button>
 
               <button
                 onClick={handleDislike}
-                disabled={!dataLoaded}
+                disabled={!dataLoaded || reactionLoading}
                 className={`group/dislike flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-200 
                            transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2
                            shadow-sm hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                             likeStatus === "dislike"
+                             article.userReaction === "dislike"
                                ? "bg-red-50 border-red-200 text-red-700 focus:ring-red-500 shadow-red-100"
                                : "bg-white border-gray-200 text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 focus:ring-red-500"
                            }`}
@@ -423,20 +496,28 @@ const ArticleDetail = () => {
                 <ThumbsDown
                   size={20}
                   className={`transition-all duration-200 group-hover/dislike:scale-110 ${
-                    likeStatus === "dislike" ? "fill-current" : ""
+                    article.userReaction === "dislike" ? "fill-current" : ""
                   }`}
                 />
                 <span className="font-medium">Tidak Suka</span>
                 <span
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
-                    likeStatus === "dislike"
+                    article.userReaction === "dislike"
                       ? "bg-red-100 text-red-700"
                       : "bg-gray-100 text-gray-600 group-hover/dislike:bg-red-100 group-hover/dislike:text-red-600"
                   }`}
                 >
-                  {likeCounts.dislikes}
+                  {article.dislike_count}
                 </span>
               </button>
+
+              {/* Loading indicator */}
+              {reactionLoading && (
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                  <span>Memproses...</span>
+                </div>
+              )}
             </div>
 
             {/* Login Notice */}

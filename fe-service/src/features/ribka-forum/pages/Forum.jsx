@@ -19,54 +19,61 @@ const Forum = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [dataLoaded, setDataLoaded] = useState(false);
 
-  const getArticleInteractions = (articleId) => {
-    const reactions = JSON.parse(
-      localStorage.getItem("article_reactions") || "{}"
-    );
-    const articleReactions = reactions[articleId] || {
-      likes: [],
-      dislikes: [],
-    };
-    return articleReactions.likes.length + articleReactions.dislikes.length;
-  };
+  // Updated function to get article interactions from backend data
+  const getArticleInteractions = useCallback((article) => {
+    // Use backend data (like_count and dislike_count) instead of localStorage
+    const likes = article.like_count || 0;
+    const dislikes = article.dislike_count || 0;
+    return likes + dislikes;
+  }, []);
 
-  const sortArticles = (articlesData, sortType) => {
-    const sortedArticles = [...articlesData];
-    switch (sortType) {
-      case "newest":
-        return sortedArticles.sort((a, b) => {
-          const dateA = new Date(a.created_at).getTime();
-          const dateB = new Date(b.created_at).getTime();
-          return dateB - dateA;
-        });
-      case "oldest":
-        return sortedArticles.sort((a, b) => {
-          const dateA = new Date(a.created_at).getTime();
-          const dateB = new Date(b.created_at).getTime();
-          return dateA - dateB;
-        });
-      default:
-        return sortedArticles;
-    }
-  };
+  const sortArticles = useCallback(
+    (articlesData, sortType) => {
+      const sortedArticles = [...articlesData];
+      switch (sortType) {
+        case "newest":
+          return sortedArticles.sort((a, b) => {
+            const dateA = new Date(a.created_at).getTime();
+            const dateB = new Date(b.created_at).getTime();
+            return dateB - dateA;
+          });
+        case "oldest":
+          return sortedArticles.sort((a, b) => {
+            const dateA = new Date(a.created_at).getTime();
+            const dateB = new Date(b.created_at).getTime();
+            return dateA - dateB;
+          });
+        case "popular":
+          return sortedArticles.sort((a, b) => {
+            const interactionsA = getArticleInteractions(a);
+            const interactionsB = getArticleInteractions(b);
+            return interactionsB - interactionsA;
+          });
+        default:
+          return sortedArticles;
+      }
+    },
+    [getArticleInteractions]
+  );
 
   const handleSort = (sortType) => {
     setSortBy(sortType);
     setShowSortMenu(false);
   };
 
+  // Updated function to get top interacted articles using backend data
   const getTopInteractedArticles = useCallback(() => {
     if (!fetchedArticles.length) return [];
 
     const articlesWithInteractions = fetchedArticles.map((article) => ({
       ...article,
-      interactions: getArticleInteractions(article.id),
+      interactions: getArticleInteractions(article),
     }));
 
     return articlesWithInteractions
       .sort((a, b) => b.interactions - a.interactions)
       .slice(0, 3);
-  }, [fetchedArticles]);
+  }, [fetchedArticles, getArticleInteractions]);
 
   const handlePrevSlide = () => {
     const topArticles = getTopInteractedArticles();
@@ -87,6 +94,8 @@ const Forum = () => {
       username: "",
       date: "",
       image: null,
+      like_count: 0,
+      dislike_count: 0,
       isPlaceholder: true,
     }));
   };
@@ -100,6 +109,7 @@ const Forum = () => {
     fetch("http://localhost:5000/forum/articles")
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched articles:", data); // Debug log
         setFetchedArticles(data);
         setDataLoaded(true);
       })
@@ -119,7 +129,7 @@ const Forum = () => {
         setArticles(sortedData);
       }
     }
-  }, [fetchedArticles, sortBy, dataLoaded]);
+  }, [fetchedArticles, sortBy, dataLoaded, sortArticles]);
 
   // Auto slide carousel
   useEffect(() => {
@@ -171,6 +181,7 @@ const Forum = () => {
         />
       )}
 
+      {/* Trending Carousel - Updated to use backend data */}
       {dataLoaded &&
         (() => {
           const topArticles = getTopInteractedArticles();
@@ -228,9 +239,11 @@ const Forum = () => {
                             </span>
                             <span
                               className="text-xs opacity-80 bg-card/20 px-2 py-1 rounded-full backdrop-blur-md
-                                     group-hover/card:opacity-90 transition-opacity duration-200 border border-primary-200/20"
+                                     group-hover/card:opacity-90 transition-opacity duration-200 border border-primary-200/20
+                                     flex items-center gap-1"
                             >
-                              {article.interactions} interaksi
+                              <span>👍 {article.like_count || 0}</span>
+                              <span>👎 {article.dislike_count || 0}</span>
                             </span>
                           </div>
                           <p className="text-primary-100 text-sm mb-1 opacity-85 group-hover/card:opacity-95 transition-opacity duration-200">
@@ -389,6 +402,23 @@ const Forum = () => {
                       )}
                     </span>
                   </button>
+                  <button
+                    onClick={() => handleSort("popular")}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 
+                         hover:bg-primary-50 hover:pl-5 active:bg-primary-100 
+                         ${
+                           sortBy === "popular"
+                             ? "bg-primary-50 text-primary-700 border-r-2 border-primary-500"
+                             : "text-card-foreground hover:text-primary-700"
+                         }`}
+                  >
+                    <span className="flex items-center">
+                      <span>Terpopuler</span>
+                      {sortBy === "popular" && (
+                        <span className="ml-auto text-primary-500">✓</span>
+                      )}
+                    </span>
+                  </button>
                 </div>
               </div>
             )}
@@ -455,7 +485,7 @@ const Forum = () => {
                 </div>
               </div>
             ) : (
-              // Real Article Card
+              // Real Article Card with interaction count
               <Link to={`/forum/${article.id}?from=forum`}>
                 <div className="bg-white rounded-xl shadow-md p-4 flex flex-col h-[420px] group hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-300 ease-out transform hover:-translate-y-2 border border-gray-100 hover:border-blue-200 cursor-pointer relative overflow-hidden">
                   {article.image && (
@@ -513,9 +543,11 @@ const Forum = () => {
 
                     {/* Footer Section - Fixed at Bottom */}
                     <div className="flex items-center justify-between pt-3 border-t border-gray-100 group-hover:border-blue-100 transition-colors duration-200 flex-shrink-0 min-w-0 mt-auto">
-                      <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors duration-200 truncate flex-shrink-0 max-w-[60%]">
-                        {article.date}
-                      </p>
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors duration-200 truncate flex-shrink-0">
+                          {article.date}
+                        </p>
+                      </div>
 
                       <div className="flex items-center gap-1 text-xs text-blue-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-200 flex-shrink-0">
                         <span className="font-medium whitespace-nowrap">
