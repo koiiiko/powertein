@@ -98,6 +98,9 @@ const router = createBrowserRouter([
 
     ),
   },
+  {
+    basename: "/powertein",
+  }
 
 ]);
 
