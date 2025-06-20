@@ -1,16 +1,21 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import vercel from 'vite-plugin-vercel';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'dist'
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
+    port: process.env.PORT,
     // Add server configuration for development server
     proxy: {
       // Configure proxies for API requests
@@ -26,4 +31,5 @@ export default defineConfig({
       },
     },
   },
+  plugins: [vercel()],
 });
