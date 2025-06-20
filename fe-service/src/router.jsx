@@ -1,17 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
-import ProtectedRoute from "./components/protectedRoute";
-import SignupPage from "./features/rifqi-auth/pages/SignUp";
-import LoginPage from "./features/rifqi-auth/pages/Login";
-import Chatbot from "./features/rifqi-chatbot/pages/Chatbot";
-import HomePage from "./pages/Home";
-import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator';
-import Forum from "./features/ribka-forum/pages/Forum";
-import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail";
-import MyArticles from "./features/ribka-forum/pages/MyArticle";
-import CreateArticle from "./features/ribka-forum/pages/CreateArticle";
-import EditArticle from "./features/ribka-forum/pages/EditArticle";
-import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage";
-import ProductDetailPage from "./features/auzan-proteinmart/pages/ProductDetailPage";
+import ProtectedRoute from "./components/protectedRoute.jsx";
+import SignupPage from "./features/rifqi-auth/pages/SignUp.jsx";
+import LoginPage from "./features/rifqi-auth/pages/Login.jsx";
+import Chatbot from "./features/rifqi-chatbot/pages/Chatbot.jsx";
+import HomePage from "./pages/Home.jsx";
+import ProteinCalculatorPage from './features/radit-calculator/pages/ProteinCalculator.jsx';
+import Forum from "./features/ribka-forum/pages/Forum.jsx";
+import ArticleDetail from "./features/ribka-forum/pages/ArticleDetail.jsx";
+import MyArticles from "./features/ribka-forum/pages/MyArticle.jsx";
+import CreateArticle from "./features/ribka-forum/pages/CreateArticle.jsx";
+import EditArticle from "./features/ribka-forum/pages/EditArticle.jsx";
+import ProductListPage from "./features/auzan-proteinmart/pages/ProductListPage.jsx";
+import ProductDetailPage from "./features/auzan-proteinmart/pages/ProductDetailPage.jsx";
 
 const router = createBrowserRouter([
   {
