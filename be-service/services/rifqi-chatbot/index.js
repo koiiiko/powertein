@@ -8,7 +8,7 @@ router.get('/chatbot-check', (req, res) => {
     res.json({
         status: 'OK',
         service: 'PowerTein AI Chatbot',
-        model: 'meta-llama/Llama-3.1-8B-Instruct',
+        model: 'llama3-70b-8192',
         capabilities: [
             'Protein and nutrition advice',
             'Fitness guidance', 
