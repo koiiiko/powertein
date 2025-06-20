@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./components/protectedRoute.jsx";
-import SignupPage from "./features/rifqi-auth/pages/SignUp.jsx";
+import SignupPage from "./features/rifqi-auth/pages/Signup.jsx";
 import LoginPage from "./features/rifqi-auth/pages/Login.jsx";
 import Chatbot from "./features/rifqi-chatbot/pages/Chatbot.jsx";
 import HomePage from "./pages/Home.jsx";
