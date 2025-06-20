@@ -98,10 +98,10 @@ const router = createBrowserRouter([
 
     ),
   },
-  {
-    basename: "/powertein",
-  }
-
-]);
+], 
+{
+  basename: "/powertein",
+}
+);
 
 export default router;
