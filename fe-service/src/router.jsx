@@ -114,9 +114,6 @@ const router = createBrowserRouter(
       ),
     },
   ],
-  {
-    basename: import.meta.env.MODE === "production" ? "/powertein" : "",
-  }
 );
 
 export default router;
