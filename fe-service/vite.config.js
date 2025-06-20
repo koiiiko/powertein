@@ -1,30 +1,33 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/powertein/',
+  base: process.env.NODE_ENV === "production" ? "/powertein/" : "/",
   build: {
-    outDir: 'dist'
+    outDir: "dist",
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: { // Add server configuration for development server
-    proxy: { // Configure proxies for API requests
+  server: {
+    // Add server configuration for development server
+    proxy: {
+      // Configure proxies for API requests
       // Proxy requests starting with /auzan-proteinmart to the backend server
-      '/auzan-proteinmart': {
-        target: 'http://localhost:5000', // Your backend server address
+      "/auzan-proteinmart": {
+        target: "http://localhost:5000", // Your backend server address
         changeOrigin: true, // Change the origin of the host header to the target URL
         // The rewrite rule is not strictly necessary here if the backend path is the same,
         // but keeping it doesn't hurt and is good practice for clarity.
         // It means a request to /auzan-proteinmart/products will be forwarded as /auzan-proteinmart/products
-        rewrite: (path) => path.replace(/^\/auzan-proteinmart/, '/auzan-proteinmart'),
+        rewrite: (path) =>
+          path.replace(/^\/auzan-proteinmart/, "/auzan-proteinmart"),
       },
-    }
-  }
-})
+    },
+  },
+});
