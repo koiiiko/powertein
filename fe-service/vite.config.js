@@ -5,7 +5,7 @@ import vercel from 'vite-plugin-vercel';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vercel()],
+  plugins: [react(), vercel()],
   build: {
     outDir: 'dist'
   },
