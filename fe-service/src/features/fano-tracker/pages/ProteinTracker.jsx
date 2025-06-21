@@ -61,27 +61,7 @@ const ProteinTracker = () => {
 
           <SearchProteinBar />
         </div>
-        <div className="flex flex-col w-full bg-white p-6 shadow-sm border border-gray-100 rounded-xl gap-4">
-          <div className="flex flex-row mb-2">
-            <p className="text-left font-medium text-lg text-gray-600 w-full items-center">
-              Konsumsi protein hari ini
-            </p>
-            <Chip size="sm" className="font-default bg-gray-100 text-gray-400">
-              Belum memenuhi kebutuhan harian
-            </Chip>
-          </div>
-
-          <Progress
-            className="w-full"
-            classNames={{ indicator: "bg-primary-500" }}
-            color="warning"
-            maxValue={userProtein}
-            size="sm"
-            value={32}
-          />
-          <p className="text-right font-medium text-sm text-gray-500 items-center">
-            70/<span>{userProtein}gr</span>
-          </p>
+        <div className="w-full">
           <DailyProteinWidget />
         </div>
 

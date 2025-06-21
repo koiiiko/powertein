@@ -36,30 +36,31 @@ const saveUserConsume = async (req, res) => {
     res.status(201).json({ message: "Data konsumsi berhasil disimpan!" });
   } catch (error) {
     console.error("Error storing consume record:", error);
-    res.status(500).json({ message: "Gagal menyimpan data konsumsi!" });
+    res.status(500).json({ message: "terjadi kesalahan pada server" });
   }
 };
 
 // Display user consume list today
 const displayUserConsumeToday = async (req, res) => {
-  const { id } = req.params;
+  const { userId } = req.params;
 
-  if (!id) {
+  if (!userId) {
     return res
       .status(400)
       .json({ message: "Tidak dapat menemukan id pengguna!" });
   }
 
   try {
-    await getUserConsumeToday(userId);
-    res
-      .status(200)
-      .json({ message: "Berhasil mengambil data konsumsi hari ini!" });
+    const data = await getUserConsumeToday(userId);
+    res.status(200).json({
+      message: "Berhasil mengambil data konsumsi hari ini!",
+      data: data,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       message:
-        "Terjadi kesalahan server, gagal mengambil data konsumsi hari ini.",
+        "Terjadi kesalahan pada server, gagal mengambil data konsumsi hari ini.",
     });
   }
 };

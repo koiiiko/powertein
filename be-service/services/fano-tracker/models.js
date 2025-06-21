@@ -12,7 +12,7 @@ const getFoodListSearch = (search) => {
       FROM food_nutrition
       WHERE namaMakanan LIKE ?
       ORDER BY namaMakanan ASC
-      LIMIT 10`;
+      LIMIT 5`;
 
     const searchParam = `${search}%`;
 
@@ -30,7 +30,7 @@ const storeConsumeRecord = (userId, nama_makanan, porsi, protein) => {
       INSERT INTO user_consume (user_id, namaMakanan, protein, jumlahPorsi, date)
       VALUES (?, ?, ?, ?, NOW())
     `;
-    con.query(query, [userId, nama_makanan, porsi, protein], (err, results) => {
+    con.query(query, [userId, nama_makanan, protein, porsi], (err, results) => {
       if (err) return reject(err);
       resolve(results);
     });
@@ -52,7 +52,9 @@ const deleteConsumeRecord = (id) => {
 const getUserConsumeToday = (userId) => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT id, namaMakanan, jumlahPorsi, (protein * jumlahPorsi) AS totalProtein, date
+      SELECT 
+      id, namaMakanan, jumlahPorsi, protein, (protein * jumlahPorsi) AS totalProtein, 
+      SUM(protein * jumlahPorsi) OVER() AS proteinHarian, date
       FROM user_consume 
       WHERE user_id = ? 
       AND DATE(date) = CURDATE()

@@ -4,7 +4,7 @@ import ProteinSearchResult from "./ProteinSearchResult";
 import DailyProteinWidget from "./DailyProteinWidget";
 import axios from "axios";
 
-import { Input } from "@heroui/react";
+import { Input, ToastProvider } from "@heroui/react";
 
 import { Search } from "lucide-react";
 
@@ -34,7 +34,6 @@ const SearchProteinBar = () => {
       setLoading(true);
       setError(null);
 
-      // Replace with your actual API endpoint
       const response = await fetch(
         `http://localhost:5000/tracker/search?query=${encodeURIComponent(
           searchQuery
@@ -55,7 +54,6 @@ const SearchProteinBar = () => {
     }
   };
 
-  // Handle input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -67,14 +65,12 @@ const SearchProteinBar = () => {
     debouncedSearch(value);
   };
 
-  // Handle food selection
   const handleFoodSelect = (food) => {
     setSelectedFood(food);
     setQuery(food.namaMakanan);
     setResults([]);
   };
 
-  // Clear search
   const clearSearch = () => {
     setQuery("");
     setResults([]);
@@ -111,7 +107,17 @@ const SearchProteinBar = () => {
         </div>
       )}
       {/* Search result */}
-      <ProteinSearchResult />
+      {results.length > 0 && (
+        <div className="flex flex-col mt-6 gap-2">
+          {results.map((food, index) => (
+            <ProteinSearchResult
+              key={index}
+              food={food}
+              onSelect={() => handleFoodSelect(food)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
