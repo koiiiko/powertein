@@ -106,9 +106,10 @@ const ArticleDetail = () => {
     });
   }, [id, userId]); // Remove dataLoaded dependency
 
+  const [errorMessage, setErrorMessage] = useState("");
   const handleReaction = async (reactionType) => {
     if (!userId) {
-      alert("Anda harus login terlebih dahulu");
+      setErrorMessage("Anda harus login terlebih dahulu");
       return;
     }
 
@@ -207,11 +208,11 @@ const ArticleDetail = () => {
           userReaction: newUserReaction,
         });
       } else {
-        alert(result.message || "Terjadi kesalahan");
+        setErrorMessage(result.message || "Terjadi kesalahan");
       }
     } catch (error) {
       console.error("Error handling reaction:", error);
-      alert("Terjadi kesalahan saat memproses reaksi");
+      setErrorMessage("Terjadi kesalahan saat memproses reaksi");
     } finally {
       setReactionLoading(false);
     }
@@ -340,6 +341,18 @@ const ArticleDetail = () => {
   // Tampilan normal artikel
   return (
     <AppsLayout>
+      {errorMessage && (
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-md z-50">
+          {errorMessage}
+          <button
+            onClick={() => setErrorMessage("")}
+            className="ml-3 font-bold"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <div className="w-full px-2 md:px-4">
         {/* Back Button */}
         <div className="mb-6">
