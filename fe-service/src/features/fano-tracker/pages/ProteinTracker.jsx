@@ -16,6 +16,7 @@ import {
 import { Search } from "lucide-react";
 
 export const periods = [
+  { key: "1", label: "Kemarin" },
   { key: "3", label: "3 hari lalu" },
   { key: "7", label: "7 hari lalu" },
   { key: "30", label: "1 bulan lalu" },
@@ -58,24 +59,12 @@ const ProteinTracker = () => {
               📊 Pantau pemenuhan protein harian Anda
             </p>
           </div>
-
           <SearchProteinBar />
         </div>
         <div className="w-full">
           <DailyProteinWidget />
         </div>
-
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex flex-row w-full items-center">
-            <p className="w-full text-left font-medium text-xl text-gray-600">
-              Riwayat Konsumsi Protein
-            </p>
-            <Select className="w-48" label="Periode" size="sm">
-              {periods.map((period) => (
-                <SelectItem key={period.key}>{period.label}</SelectItem>
-              ))}
-            </Select>
-          </div>
           <HistoryProteinWidget />
         </div>
       </div>

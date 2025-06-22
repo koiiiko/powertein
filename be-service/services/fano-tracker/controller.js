@@ -36,7 +36,7 @@ const saveUserConsume = async (req, res) => {
     res.status(201).json({ message: "Data konsumsi berhasil disimpan!" });
   } catch (error) {
     console.error("Error storing consume record:", error);
-    res.status(500).json({ message: "terjadi kesalahan pada server" });
+    res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 };
 
@@ -79,10 +79,15 @@ const displayUserConsumeHistory = async (req, res) => {
   }
 
   try {
-    await getConsumeRecordByPeriod(userId, period);
+    const historyData = await getConsumeRecordByPeriod(
+      userId,
+      parseInt(period)
+    );
+
     res.status(200).json({
       message: `Berhasil mengambil data untuk ${period} hari terakhir.`,
       period: period,
+      data: historyData,
     });
   } catch (error) {
     console.error(error);
@@ -94,22 +99,24 @@ const displayUserConsumeHistory = async (req, res) => {
 
 // Display record details per timestamp
 const displayUserConsumeDetails = async (req, res) => {
-  const { timestamp } = req.params;
-  const { userId } = req.body;
+  const { timestamp, userId } = req.params;
 
   if (!userId) {
     return res.status(400).json({ message: "ID pengguna tidak ditemukan" });
   }
 
-  if (!period) {
+  if (!timestamp) {
     return res
       .status(400)
       .json({ message: "Harap memasukkan tanggal pada data." });
   }
 
   try {
-    await getConsumeRecordByTimestamp(userId, timestamp);
-    res.status(200).json({ message: "Berhasil mengambil data!" });
+    const detailsData = await getConsumeRecordByTimestamp(userId, timestamp);
+    res.status(200).json({
+      message: "Berhasil mengambil data!",
+      data: detailsData,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({

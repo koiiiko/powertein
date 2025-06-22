@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Layout from "@/components/layout";
 import ProteinSearchResult from "./ProteinSearchResult";
 import DailyProteinWidget from "./DailyProteinWidget";
+import InputProteinForm from "./InputProteinForm";
 import axios from "axios";
 
 import { Input, ToastProvider } from "@heroui/react";
@@ -101,12 +102,18 @@ const SearchProteinBar = () => {
         onChange={handleInputChange}
       />
       {query && !loading && results.length === 0 && !error && (
-        <div className="text-center py-8 text-gray-500">
-          <Search className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-          <p>No food items found for "{query}"</p>
+        <div className="flex flex-col text-center py-8 text-gray-400 gap-4">
+          <div className="flex flex-row w-full justify-center text-center items-center gap-2">
+            <Search className="h-6 w-6 mb-1 text-primary-500" />
+            <p className="text-sm font-medium text-gray-500">
+              Tidak ada data ditemukan untuk "{query}"
+            </p>
+          </div>
+
+          <InputProteinForm />
         </div>
       )}
-      {/* Search result */}
+
       {results.length > 0 && (
         <div className="flex flex-col mt-6 gap-2">
           {results.map((food, index) => (

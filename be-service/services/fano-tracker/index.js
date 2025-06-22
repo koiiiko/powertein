@@ -14,7 +14,7 @@ router.get("/search", fetchFoodListSearch);
 router.post("/save", saveUserConsume);
 router.get("/today/:userId", displayUserConsumeToday);
 router.get("/history/:period", displayUserConsumeHistory);
-router.get("/history/:timestamp", displayUserConsumeDetails);
+router.get("/history/:timestamp/:userId", displayUserConsumeDetails);
 router.delete("/delete/:id", deleteUserConsume);
 
 module.exports = router;

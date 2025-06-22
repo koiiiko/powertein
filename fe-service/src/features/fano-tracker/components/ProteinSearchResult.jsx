@@ -115,12 +115,12 @@ const ProteinSearchResult = ({ food }) => {
         <Plus className="text-white" />
       </Button>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="xl">
         <ModalContent className="p-2">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-lg font-medium text-gray-700">
-                Tambahkan Makanan
+                Tambahkan Konsumsi Makanan
               </ModalHeader>
               <ModalBody className="gap-6">
                 {successAlert && (
