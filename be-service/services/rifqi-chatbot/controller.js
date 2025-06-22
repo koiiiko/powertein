@@ -3,7 +3,6 @@ const Groq = require("groq-sdk");
 
 
 class ChatbotController {
-  // POST /chatbot/chat
   static async chat(req, res) {
     try {
       const { message, conversationHistory = [] } = req.body;
@@ -64,7 +63,7 @@ class ChatbotController {
           response_length: chatCompletion.usage.completion_tokens
         };
 
-      // Keep only last 5 messages to avoid token limits
+      // conversationHistory hanya akan menyimpan lima percakapan terakhir untuk meminimalisir penggunaan token berlebih
       const trimmedHistory = updatedHistory.slice(-5);
 
       res.json({
